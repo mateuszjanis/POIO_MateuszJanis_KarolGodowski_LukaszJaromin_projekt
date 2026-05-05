@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="RobotyGPT/RobotyGPT.vcxproj" Id="91feeda6-a0a7-4714-a739-b39dd19a5161" />
+</Solution>
