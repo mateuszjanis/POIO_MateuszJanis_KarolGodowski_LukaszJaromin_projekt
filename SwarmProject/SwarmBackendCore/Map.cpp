@@ -54,8 +54,75 @@ std::vector<int> Map::get_map() {
 
 }
 
-void Map::put_on_map(int object, int x_coord, int y_coord)
+int Map::placeRobot(int x, int y)
 {
+	int com;
 
-};
+	if (x > 0 && y > 0) {
+		if (x < size_x) {
+			if (y < size_y) {
+				switch (obj_map[coord2id(x, y)])
+				{
+				case 0:
+					obj_map[coord2id(x, y)] = 2;
+					com = 0; // jest ok
+					break;
+				case 1:
+					com = -1; // przeszkoda
+					break;
+				case 2:
+					com = -2; // robot
+					break;
+				}
+			}
+			else {
+				com = 1; // y poza granicą
+			}
+		}
+		else {
+			com = 2; // x poza granicą
+		}
+	}
+	else {
+		com = 3; // współrzędne ujemne
+	}
+
+	return com;
+}
+
+int Map::placeObstacle(int x, int y)
+{
+	int com;
+
+	if (x > 0 && y > 0) {
+		if (x < size_x) {
+			if (y < size_y) {
+				switch (obj_map[coord2id(x, y)])
+				{
+				case 0:
+					obj_map[coord2id(x, y)] = 1;
+					com = 0; // jest ok
+					break;
+				case 1:
+					com = -1; // przeszkoda
+					break;
+				case 2:
+					com = -2; // robot
+					break;
+				}
+			}
+			else {
+				com = 1; // y poza granicą
+			}
+		}
+		else {
+			com = 2; // x poza granicą
+		}
+	}
+	else {
+		com = 3; // współrzędne ujemne
+	}
+
+	return com;
+}
 

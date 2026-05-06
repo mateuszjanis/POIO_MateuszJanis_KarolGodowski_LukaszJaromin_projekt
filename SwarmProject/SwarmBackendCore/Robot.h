@@ -2,6 +2,7 @@
 #pragma once
 #include "pch.h"
 #include "Vector2D.h"
+#include "Map.h"
 
 
 class Robot
@@ -11,7 +12,8 @@ private:
     Vector2D velocity;
     Vector2D force;
 
-    double radius;
+    int radius;
+    int x_pos, y_pos;
     double maxSpeed;
 
 public:
@@ -23,6 +25,7 @@ public:
     void setForce(double fx, double fy);
     void addForce(double fx, double fy);
     void addForce(const Vector2D& newForce);
+    void computeForce(Map mapa); //
     void clearForce();
 
     void update(double dt);

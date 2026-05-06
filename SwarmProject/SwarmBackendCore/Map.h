@@ -20,9 +20,10 @@ public:
 	int get_size_y();
 	std::vector<int> get_map();
 	int coord2id(int x, int y);
+	int placeRobot(int x, int y);
+	int placeObstacle(int x, int y);
 
 private:
-	void put_on_map(int object, int x_coord, int y_coord);
 
 };
 
