@@ -1,5 +1,19 @@
 ﻿  Robot.cpp
+  Vector2D.cpp
 C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmBackendCore\Robot.cpp(9,11): warning C4244: "inicjowanie": konwersja z "double" do "int", możliwa utrata danych
   (kompilowanie pliku źródłowego „/Robot.cpp”)
   
+C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmBackendCore\Vector2D.cpp(7,8): warning C4244: "inicjowanie": konwersja z "double" do "int", możliwa utrata danych
+  (kompilowanie pliku źródłowego „/Vector2D.cpp”)
+  
+C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmBackendCore\Vector2D.cpp(7,16): warning C4244: "inicjowanie": konwersja z "double" do "int", możliwa utrata danych
+  (kompilowanie pliku źródłowego „/Vector2D.cpp”)
+  
+C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmBackendCore\Vector2D.cpp(12,8): warning C4244: "inicjowanie": konwersja z "double" do "int", możliwa utrata danych
+  (kompilowanie pliku źródłowego „/Vector2D.cpp”)
+  
+C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmBackendCore\Vector2D.cpp(12,14): warning C4244: "inicjowanie": konwersja z "double" do "int", możliwa utrata danych
+  (kompilowanie pliku źródłowego „/Vector2D.cpp”)
+  
+  Generowanie kodu...
   SwarmBackendCore.vcxproj -> C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\x64\Debug\SwarmBackendCore.lib
