@@ -1,10 +1,11 @@
 #pragma once 
 #include "pch.h"
+
 class Vector2D
 {
 public:
-    int x;
-    int y;
+    double x;
+    double y;
 
     Vector2D();
     Vector2D(double x, double y);
