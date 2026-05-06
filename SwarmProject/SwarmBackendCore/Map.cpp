@@ -17,13 +17,6 @@ Map::Map(int x_len, int y_len)
 	this -> resize(x_len, y_len);
 }
 
-int Map::coord2id(int x, int y)
-{
-	int vec_id = this->size_y * x + y;
-
-	return vec_id;
-}
-
 void Map::resize(int x_len, int y_len) {
 
 	size_x = x_len;
@@ -70,6 +63,7 @@ vector<vector<int>> Map::get_map() {
 int Map::placeRobot(int x, int y)
 {
 	int com;
+	Robot new_robot(x, y);
 
 	if (x > 0 && y > 0) {
 		if (x < size_x) {
@@ -79,6 +73,8 @@ int Map::placeRobot(int x, int y)
 				case 0:
 					obj_map[x][y] = 2;
 					com = 0; // jest ok
+
+					robot_list.push_back(new_robot);
 					break;
 				case 1:
 					com = -1; // przeszkoda
@@ -137,5 +133,52 @@ int Map::placeObstacle(int x, int y)
 	}
 
 	return com;
+}
+
+void Map::clearRobot(int id)
+{
+	int x = robot_list[id].getPosX();
+	int y = robot_list[id].getPosY();
+	obj_map[x][y] = 0;
+}
+
+bool Map::moveRobot(int id, int moveX, int moveY)
+{
+	bool com;
+
+	int x = robot_list[id].getPosX() + moveX;
+	int y = robot_list[id].getPosY() + moveY;
+
+	if (obj_map[x][y] != 0)
+	{
+		com = 0; // miejsce zajęte
+	}
+	else
+	{
+		obj_map[x][y] = 2;
+		com = 1;
+	}
+
+	return com;
+}
+
+void Map::update()
+{
+	int id = 0;
+
+	for (auto& robot : robot_list)
+	{
+		int moveX = robot.computeMoveX(obj_map);
+		int moveY = robot.computeMoveY(obj_map);
+	
+		this->clearRobot(id);
+		
+		if (this->moveRobot(id, moveX, moveY))
+		{
+			//robot.setPosition(moveX, moveY);
+		}
+
+		id++;
+	}
 }
 

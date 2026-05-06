@@ -1,13 +1,13 @@
 #pragma once
 #include "pch.h"
 #include <vector>
-//#include "Robot.h"
+#include "Robot.h"
 
 class Map
 {
 
 	int size_x, size_y;
-	//std::vector<Robot> robot_list;
+	std::vector<Robot> robot_list;
 	std::vector<std::vector<int>> obj_map; 
 
 public:
@@ -19,9 +19,11 @@ public:
 	std::vector<std::vector<int>> get_map();
 
 	void resize(int x_len, int y_len);
-	int coord2id(int x, int y);
+	void update();
 	int placeRobot(int x, int y);
 	int placeObstacle(int x, int y);
+	bool moveRobot(int id, int moveX, int moveY);
+	void clearRobot(int id);
 
 private:
 

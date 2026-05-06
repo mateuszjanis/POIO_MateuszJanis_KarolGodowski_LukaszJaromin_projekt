@@ -1,16 +1,12 @@
-
 #pragma once
 #include "pch.h"
-#include "Vector2D.h"
-#include "Map.h"
+#include <vector>
+//#include "Map.h"
 
 
 class Robot
 {
 private:
-    Vector2D position;
-    Vector2D velocity;
-    Vector2D force;
 
     int radius;
     int x_pos, y_pos;
@@ -18,24 +14,28 @@ private:
     double mass;
 
 public:
-    Robot(double x, double y);
+    Robot(int x, int y);
 
-    void setPosition(double x, double y);
-    void setVelocity(double vx, double vy);
+    void setPosition(int x, int y);
+    //void setVelocity(double vx, double vy);
 
-    void setForce(double fx, double fy);
-    void addForce(double fx, double fy);
-    void addForce(const Vector2D& newForce);
-    void computeForce(Map mapa); //
-    void clearForce();
+    //void setForce(double fx, double fy);
+    //void addForce(double fx, double fy);
+    //void addForce(const Vector2D& newForce);
+    //void computeForce(Map mapa); //
+    //void clearForce();
 
-    void update(double dt);
+    //void update(double dt);
 
-    Vector2D getPosition() const;
-    Vector2D getVelocity() const;
-    Vector2D getForce() const;
+    int getPosX();
+    int getPosY();
 
-    double getRadius() const;
-    double getMass() const;
-    double getMaxSpeed() const;
+    // do dopisania
+    int computeMoveX(std::vector<std::vector<int>> obj_map);
+    int computeMoveY(std::vector<std::vector<int>> obj_map);
+    // ^^^^^^^^^^^^
+
+    double getRadius();
+    //double getMass() const;
+    //double getMaxSpeed() const;
 };
