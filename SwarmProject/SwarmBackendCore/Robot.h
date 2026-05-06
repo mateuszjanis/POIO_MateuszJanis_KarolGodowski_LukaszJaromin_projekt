@@ -15,6 +15,7 @@ private:
     int radius;
     int x_pos, y_pos;
     double maxSpeed;
+    double mass;
 
 public:
     Robot(double x, double y);
@@ -35,5 +36,6 @@ public:
     Vector2D getForce() const;
 
     double getRadius() const;
+    double getMass() const;
     double getMaxSpeed() const;
 };
