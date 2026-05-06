@@ -1,17 +1,18 @@
 #pragma once
 #include "pch.h"
 #include <vector>
-//#include "Map.h"
-
+#include <cmath>
 
 class Robot
 {
 private:
-
-    int radius;
+    double k = 1;
+    double dt = 1;
+    int radius = 5;
     int x_pos, y_pos;
-    double maxSpeed;
-    double mass;
+
+    //double maxSpeed;
+    //double mass;
 
 public:
     Robot(int x, int y);

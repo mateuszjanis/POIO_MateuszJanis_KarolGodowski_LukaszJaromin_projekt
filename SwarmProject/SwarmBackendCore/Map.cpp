@@ -175,7 +175,7 @@ void Map::update()
 		
 		if (this->moveRobot(id, moveX, moveY))
 		{
-			//robot.setPosition(moveX, moveY);
+			robot.setPosition(moveX, moveY);
 		}
 
 		id++;
