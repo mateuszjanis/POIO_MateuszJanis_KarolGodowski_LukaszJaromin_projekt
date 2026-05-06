@@ -1,0 +1,7 @@
+﻿  Map.cpp
+  Robot.cpp
+C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmBackendCore\Robot.cpp(9,11): warning C4244: "inicjowanie": konwersja z "double" do "int", możliwa utrata danych
+  (kompilowanie pliku źródłowego „/Robot.cpp”)
+  
+  Generowanie kodu...
+  SwarmBackendCore.vcxproj -> C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\x64\Debug\SwarmBackendCore.lib
