@@ -1,28 +1,33 @@
 #pragma once
 #include "pch.h"
 #include <vector>
+#include "Robot.h"
 
 class Map
 {
 
 	int size_x, size_y;
-	std::vector<int> obj_map; // mapa przechowywana w wektorze 
-							  // (dodatkowa metoda ... przeliczająca x,y na miejsce w wektorze)
-							  // {x0y0, x0y1, x0y2, x1y0, x1y1, x1y2, x2y0,...}
-							  // |________________|
-							  //    jeden wiersz
+	std::vector<Robot> robot_list;
+	std::vector<std::vector<int>> obj_map; 
+
 public:
 	Map();
 	Map(int x_len, int y_len);
-	//void show();
-	void resize(int x_len, int y_len);
+
 	int get_size_x();
 	int get_size_y();
-	std::vector<int> get_map();
-	int coord2id(int x, int y);
+	int get_robot_num();
+	std::vector<int> get_robot_pos(int id);
+	std::vector<std::vector<int>> get_map();
+
+	void resize(int x_len, int y_len);
+	void update();
+	int placeRobot(int x, int y);
+	int placeObstacle(int x, int y);
+	void moveRobot(int id, std::vector<int> move);
+	void clearRobot(int id);
 
 private:
-	void put_on_map(int object, int x_coord, int y_coord);
 
 };
 

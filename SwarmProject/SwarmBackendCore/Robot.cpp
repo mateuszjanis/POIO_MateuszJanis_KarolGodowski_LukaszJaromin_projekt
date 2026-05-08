@@ -1,87 +1,105 @@
 #include "pch.h"
 #include "Robot.h"
 
+using namespace std;
 
-Robot::Robot(double x, double y)
-    : position(x, y),
-    velocity(0.0, 0.0),
-    force(0.0, 0.0),
-    radius(5.0),
-    maxSpeed(100.0)
+Robot::Robot(int x, int y)
 {
+    x_pos = x;
+    y_pos = y;
 }
 
-void Robot::setPosition(double x, double y)
+void Robot::setPosition(int newX, int newY)
 {
-    position = Vector2D(x, y);
+    x_pos = newX;
+    y_pos = newY;
 }
 
-void Robot::setVelocity(double vx, double vy)
+int Robot::getPosX()
 {
-    velocity = Vector2D(vx, vy);
+    return x_pos;
 }
 
-void Robot::setForce(double fx, double fy)
+int Robot::getPosY()
 {
-    force = Vector2D(fx, fy);
+    return y_pos;
 }
 
-void Robot::addForce(double fx, double fy)
-{
-    force += Vector2D(fx, fy);
-}
-
-void Robot::addForce(const Vector2D& newForce)
-{
-    force += newForce;
-}
-
-void Robot::clearForce()
-{
-    force = Vector2D(0.0, 0.0);
-}
-
-void Robot::update(double dt)
-{
-    if (dt <= 0.0)
-    {
-        return;
-    }
-
-    Vector2D acceleration = force;
-
-    velocity += acceleration * dt;
-
-    if (velocity.length() > maxSpeed)
-    {
-        velocity = velocity.normalized() * maxSpeed;
-    }
-
-    position += velocity * dt;
-}
-
-Vector2D Robot::getPosition() const
-{
-    return position;
-}
-
-Vector2D Robot::getVelocity() const
-{
-    return velocity;
-}
-
-Vector2D Robot::getForce() const
-{
-    return force;
-}
-
-double Robot::getRadius() const
+double Robot::getRadius()
 {
     return radius;
 }
 
-
-double Robot::getMaxSpeed() const
+double Robot::ForceX_component(int dx, int dy, int currObj)
 {
-    return maxSpeed;
+    double ForceComponent = 0;
+
+    if (dx == 0 || currObj == 0 || dx * dx + dy * dy > radius * radius)
+    {
+        ForceComponent = 0;
+    }
+    else if (dx > 0)
+    {
+        ForceComponent = - k * 1 / pow(dx, 2);
+    }
+    else
+    {
+        ForceComponent = k * 1 / pow(dx, 2);
+    }
+
+    return ForceComponent;
+
 }
+
+double Robot::ForceY_component(int dx, int dy, int currObj)
+{
+    double ForceComponent = 0;
+
+    if (dy == 0 || currObj == 0 || dx * dx + dy * dy > radius * radius)
+    {
+        ForceComponent = 0;
+    }
+    else if (dy > 0)
+    {
+        ForceComponent = - k * 1 / pow(dy, 2);
+    }
+    else
+    {
+        ForceComponent = k * 1 / pow(dy, 2);
+    }
+
+    return ForceComponent;
+
+}
+
+vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
+{
+    double ForceX = 0;
+    double ForceY = 0;
+    vector<int> move(2);
+
+    int cols = obj_map.size();
+    int rows = obj_map[0].size();
+
+    int x_min = max(0, x_pos - radius);
+    int x_max = min(cols - 1, x_pos + radius);
+    int y_min = max(0, y_pos - radius);
+    int y_max = min(rows - 1, y_pos + radius);
+
+    for (int i = x_min; i <= x_max; i++) {
+        for (int j = y_min; j <= y_max; j++) {
+
+            int dx = i - x_pos;
+            int dy = j - y_pos;
+
+            ForceX += ForceX_component(dx, dy, obj_map[i][j]);
+            ForceY += ForceY_component(dx, dy, obj_map[i][j]);
+        }
+    }
+
+    move[0] = round(ForceX * dt * dt);
+    move[1] = round(ForceY * dt * dt); // policzenie przemieszczenia
+
+    return move;
+
+};

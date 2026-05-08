@@ -1,36 +1,26 @@
-
 #pragma once
 #include "pch.h"
-#include "Vector2D.h"
-
+#include <vector>
+#include <cmath>
 
 class Robot
 {
 private:
-    Vector2D position;
-    Vector2D velocity;
-    Vector2D force;
-
-    double radius;
-    double maxSpeed;
+    double k = 1;
+    double dt = 1;
+    int radius = 10;
+    int x_pos, y_pos;
 
 public:
-    Robot(double x, double y);
+    Robot(int x, int y);
 
-    void setPosition(double x, double y);
-    void setVelocity(double vx, double vy);
+    void setPosition(int x, int y);
+    int getPosX();
+    int getPosY();
+    double getRadius();
+    std::vector<int> computeMove(std::vector<std::vector<int>> obj_map);
 
-    void setForce(double fx, double fy);
-    void addForce(double fx, double fy);
-    void addForce(const Vector2D& newForce);
-    void clearForce();
-
-    void update(double dt);
-
-    Vector2D getPosition() const;
-    Vector2D getVelocity() const;
-    Vector2D getForce() const;
-
-    double getRadius() const;
-    double getMaxSpeed() const;
+private:
+    double ForceX_component(int dx, int dy, int currObj);
+    double ForceY_component(int dx, int dy, int currObj);
 };
