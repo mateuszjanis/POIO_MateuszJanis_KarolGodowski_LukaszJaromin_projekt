@@ -156,13 +156,12 @@ void Map::clearRobot(int id)
 	obj_map[x][y] = 0;
 }
 
-void Map::moveRobot(int id, int moveX, int moveY)
+void Map::moveRobot(int id, vector<int> move)
 {
-	int xtemp = robot_list[id].getPosX() + moveX;
-	int ytemp = robot_list[id].getPosY() + moveY;
+	int xtemp = robot_list[id].getPosX() + move[0];
+	int ytemp = robot_list[id].getPosY() + move[1];
 
 	// Dojechanie do granic
-
 	if (xtemp <= 0)
 	{
 		xtemp = 0;
@@ -188,20 +187,20 @@ void Map::moveRobot(int id, int moveX, int moveY)
 	{
 		if (obj_map[xtemp][ytemp] != 0)
 		{
-			if (moveX < 0)
+			if (move[0] < 0)
 			{
 				xtemp + 1;
 			}
-			else if (moveX > 0)
+			else if (move[0] > 0)
 			{
 				xtemp - 1;
 			}
 
-			if (moveY < 0)
+			if (move[1] < 0)
 			{
 				ytemp + 1;
 			}
-			else if (moveY > 0)
+			else if (move[1] > 0)
 			{
 				ytemp - 1;
 			}
@@ -224,11 +223,10 @@ void Map::update()
 
 	for (auto& robot : robot_list)
 	{
-		int moveX = robot.computeMoveX(obj_map);
-		int moveY = robot.computeMoveY(obj_map);
+		vector<int> move = robot.computeMove(obj_map);
 	
 		this->clearRobot(id);	
-		this->moveRobot(id, moveX, moveY);
+		this->moveRobot(id, move);
 
 		id++;
 	}

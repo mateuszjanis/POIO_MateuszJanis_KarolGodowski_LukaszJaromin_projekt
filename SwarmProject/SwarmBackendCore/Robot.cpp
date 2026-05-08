@@ -110,57 +110,149 @@ double Robot::getRadius()
     return radius;
 }
 
-int Robot::computeMoveX(std::vector<std::vector<int>> obj_map)
+//int Robot::computeMoveX(std::vector<std::vector<int>> obj_map)
+//{
+//    double ForceX = 0;
+//    int moveX;
+//
+//    int rows = obj_map.size();
+//    int cols = obj_map[0].size();
+//    
+//    int x_min = max(0, x_pos - radius);
+//    int x_max = min(cols - 1, x_pos + radius);
+//    int y_min = max(0, y_pos - radius);
+//    int y_max = min(rows - 1, y_pos + radius);
+//
+//    for (int i = x_min; i <= x_max; i++) {
+//        for (int j = y_min; j <= y_max; j++) {
+//
+//            int dx = i - x_pos;
+//            int dy = j - y_pos;
+//
+//            if (dx != 0)
+//            {
+//
+//                // warunek okręgu
+//                if (dx * dx + dy * dy <= radius * radius) {
+//                    if (obj_map[i][j] != 0)
+//                    {
+//                        if (dx > 0)
+//                        {
+//                            ForceX -= k * 1 / pow(dx,2);
+//                        }
+//                        else
+//                        {
+//                            ForceX += k * 1 / pow(dx,2);
+//                        }
+//                    }
+//
+//                }
+//            }
+//        }
+//    }
+//
+//    moveX = round(ForceX * dt * dt); // policzenie przemieszczenia
+//
+//    return moveX;
+//
+//};
+//
+//int Robot::computeMoveY(std::vector<std::vector<int>> obj_map)
+//{   
+//    double ForceY = 0;
+//    int moveY;
+//
+//    int cols = obj_map.size();
+//    int rows = obj_map[0].size();
+//
+//    int x_min = max(0, x_pos - radius);
+//    int x_max = min(cols - 1, x_pos + radius);
+//    int y_min = max(0, y_pos - radius);
+//    int y_max = min(rows - 1, y_pos + radius);
+//
+//    
+//
+//    for (int i = x_min; i <= x_max; i++) {
+//        for (int j = y_min; j <= y_max; j++) {
+//
+//            int dx = i - x_pos;
+//            int dy = j - y_pos;
+//
+//            if (dy != 0)
+//            {
+//
+//                // warunek okręgu
+//                if (dx * dx + dy * dy <= radius * radius) {
+//                    if (obj_map[i][j] != 0)
+//                    {
+//                        if (dy > 0)
+//                        {
+//                            ForceY -= k * 1 / pow(dy,2);
+//                        }
+//                        else
+//                        {
+//                            ForceY += k * 1 / pow(dy,2);
+//                        }
+//                    }
+//                }
+//
+//            }
+//        }
+//    }
+//
+//    moveY = round(ForceY * dt * dt); // policzenie przemieszczenia
+//
+//    return moveY;
+//
+//};
+
+double Robot::ForceX_component(int dx, int dy, int currObj)
 {
-    double ForceX = 0;
-    int moveX;
+    double ForceComponent = 0;
 
-    int rows = obj_map.size();
-    int cols = obj_map[0].size();
-    
-    int x_min = max(0, x_pos - radius);
-    int x_max = min(cols - 1, x_pos + radius);
-    int y_min = max(0, y_pos - radius);
-    int y_max = min(rows - 1, y_pos + radius);
-
-    for (int i = x_min; i <= x_max; i++) {
-        for (int j = y_min; j <= y_max; j++) {
-
-            int dx = i - x_pos;
-            int dy = j - y_pos;
-
-            if (dx != 0)
-            {
-
-                // warunek okręgu
-                if (dx * dx + dy * dy <= radius * radius) {
-                    if (obj_map[i][j] != 0)
-                    {
-                        if (dx > 0)
-                        {
-                            ForceX -= k * 1 / pow(dx,2);
-                        }
-                        else
-                        {
-                            ForceX += k * 1 / pow(dx,2);
-                        }
-                    }
-
-                }
-            }
-        }
+    if (dx == 0 || currObj == 0 || dx * dx + dy * dy > radius * radius)
+    {
+        ForceComponent = 0;
+    }
+    else if (dx > 0)
+    {
+        ForceComponent = - k * 1 / pow(dx, 2);
+    }
+    else
+    {
+        ForceComponent = k * 1 / pow(dx, 2);
     }
 
-    moveX = round(ForceX * dt * dt); // policzenie przemieszczenia
+    return ForceComponent;
 
-    return moveX;
+}
 
-};
+double Robot::ForceY_component(int dx, int dy, int currObj)
+{
+    double ForceComponent = 0;
 
-int Robot::computeMoveY(std::vector<std::vector<int>> obj_map)
-{   
+    if (dy == 0 || currObj == 0 || dx * dx + dy * dy > radius * radius)
+    {
+        ForceComponent = 0;
+    }
+    else if (dy > 0)
+    {
+        ForceComponent = - k * 1 / pow(dy, 2);
+    }
+    else
+    {
+        ForceComponent = k * 1 / pow(dy, 2);
+    }
+
+    return ForceComponent;
+
+}
+
+vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
+{
+    double ForceX = 0;
     double ForceY = 0;
-    int moveY;
+    vector<int> move(2);
 
     int cols = obj_map.size();
     int rows = obj_map[0].size();
@@ -170,41 +262,25 @@ int Robot::computeMoveY(std::vector<std::vector<int>> obj_map)
     int y_min = max(0, y_pos - radius);
     int y_max = min(rows - 1, y_pos + radius);
 
-    
-
     for (int i = x_min; i <= x_max; i++) {
         for (int j = y_min; j <= y_max; j++) {
 
             int dx = i - x_pos;
             int dy = j - y_pos;
 
-            if (dy != 0)
-            {
-
-                // warunek okręgu
-                if (dx * dx + dy * dy <= radius * radius) {
-                    if (obj_map[i][j] != 0)
-                    {
-                        if (dy > 0)
-                        {
-                            ForceY -= k * 1 / pow(dy,2);
-                        }
-                        else
-                        {
-                            ForceY += k * 1 / pow(dy,2);
-                        }
-                    }
-                }
-
-            }
+            ForceX += ForceX_component(i, j, obj_map[i][j]);
+            ForceY += ForceY_component(i, j, obj_map[i][j]);
         }
     }
 
-    moveY = round(ForceY * dt * dt); // policzenie przemieszczenia
+    move[0] = round(ForceX * dt * dt);
+    move[1] = round(ForceY * dt * dt); // policzenie przemieszczenia
 
-    return moveY;
+    return move;
 
 };
+
+
 
 //
 //
