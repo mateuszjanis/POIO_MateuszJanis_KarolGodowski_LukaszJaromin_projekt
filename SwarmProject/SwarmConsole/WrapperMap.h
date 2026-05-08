@@ -11,6 +11,9 @@ public:
 	void show();
 	int placeRobot(int x, int y);
 	int placeObstacle(int x, int y);
+	void update();
+	void showRobotPos();
+
 private:
 
 };

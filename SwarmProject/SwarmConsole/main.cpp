@@ -1,6 +1,8 @@
 #include "Map.h"
 #include "WrapperMap.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
@@ -24,7 +26,7 @@ int main() {
 		}
 	}
 
-	cout << endl << "Podaj liczbe robotów: ";
+	cout << endl << "Podaj liczbe robotow: ";
 	cin >> robotCount;
 
 	for (int i = 0; i < robotCount; i++)
@@ -36,6 +38,17 @@ int main() {
 		{
 			i--;
 		}
+	}
+	
+	for (int i = 0; i < 100; i++)
+	{
+		system("CLS");
+		cout << "=============" << " SYMULACJA " << "=============\n";
+		mapa.show();
+		mapa.showRobotPos();
+		mapa.update();
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		
 	}
 
 	return 0;

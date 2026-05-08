@@ -16,13 +16,15 @@ public:
 
 	int get_size_x();
 	int get_size_y();
+	int get_robot_num();
+	std::vector<int> get_robot_pos(int id);
 	std::vector<std::vector<int>> get_map();
 
 	void resize(int x_len, int y_len);
 	void update();
 	int placeRobot(int x, int y);
 	int placeObstacle(int x, int y);
-	bool moveRobot(int id, int moveX, int moveY);
+	void moveRobot(int id, int moveX, int moveY);
 	void clearRobot(int id);
 
 private:

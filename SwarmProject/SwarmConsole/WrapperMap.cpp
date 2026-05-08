@@ -100,3 +100,21 @@ int WrapperMap::placeObstacle(int x, int y)
 
 	return doDecrement;
 }
+
+void WrapperMap::update()
+{
+	mapa->update();
+}
+
+void WrapperMap::showRobotPos()
+{
+	int count = mapa->get_robot_num();
+	vector<int> tempRobotPos(2);
+
+	for (int i = 0; i < count; i++)
+	{
+		tempRobotPos = mapa->get_robot_pos(i);
+		cout << "Robot "<< i << " x: " << tempRobotPos[0] 
+			<<" y: " << tempRobotPos[1] << endl;
+	}
+}

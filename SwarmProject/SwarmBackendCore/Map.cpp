@@ -54,6 +54,20 @@ int Map::get_size_y() {
 
 }
 
+int Map::get_robot_num()
+{
+	return robot_list.size();
+}
+
+vector<int> Map::get_robot_pos(int id)
+{
+	vector<int> position(2);
+	position[0] = robot_list[id].getPosX();
+	position[1] = robot_list[id].getPosX();
+
+	return position;
+}
+
 vector<vector<int>> Map::get_map() {
 
 	return obj_map;
@@ -142,24 +156,66 @@ void Map::clearRobot(int id)
 	obj_map[x][y] = 0;
 }
 
-bool Map::moveRobot(int id, int moveX, int moveY)
+void Map::moveRobot(int id, int moveX, int moveY)
 {
-	bool com;
+	int xtemp = robot_list[id].getPosX() + moveX;
+	int ytemp = robot_list[id].getPosY() + moveY;
 
-	int x = robot_list[id].getPosX() + moveX;
-	int y = robot_list[id].getPosY() + moveY;
+	// Dojechanie do granic
 
-	if (obj_map[x][y] != 0)
+	if (xtemp <= 0)
 	{
-		com = 0; // miejsce zajęte
+		xtemp = 0;
 	}
-	else
+	else if (xtemp >= size_x - 1)
 	{
-		obj_map[x][y] = 2;
-		com = 1;
+		xtemp = size_x - 1;
 	}
 
-	return com;
+	if (ytemp <= 0)
+	{
+		ytemp = 0;
+	}
+	else if (ytemp >= size_y - 1)
+	{
+		ytemp = size_y - 1;
+	}
+
+	// Natrafienie na obiekt
+	bool checkObstacle = 1;
+
+	while (checkObstacle)
+	{
+		if (obj_map[xtemp][ytemp] != 0)
+		{
+			if (moveX < 0)
+			{
+				xtemp + 1;
+			}
+			else if (moveX > 0)
+			{
+				xtemp - 1;
+			}
+
+			if (moveY < 0)
+			{
+				ytemp + 1;
+			}
+			else if (moveY > 0)
+			{
+				ytemp - 1;
+			}
+
+		}
+		else
+		{
+			checkObstacle = 0;
+		}
+	}
+
+	robot_list[id].setPosition(xtemp, ytemp); // czy działam na kopii czy na obiekcie ?????
+	obj_map[xtemp][ytemp] = 2;
+
 }
 
 void Map::update()
@@ -171,12 +227,8 @@ void Map::update()
 		int moveX = robot.computeMoveX(obj_map);
 		int moveY = robot.computeMoveY(obj_map);
 	
-		this->clearRobot(id);
-		
-		if (this->moveRobot(id, moveX, moveY))
-		{
-			robot.setPosition(moveX, moveY);
-		}
+		this->clearRobot(id);	
+		this->moveRobot(id, moveX, moveY);
 
 		id++;
 	}

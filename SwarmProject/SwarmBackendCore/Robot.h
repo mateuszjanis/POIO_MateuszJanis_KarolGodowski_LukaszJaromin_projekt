@@ -8,7 +8,7 @@ class Robot
 private:
     double k = 1;
     double dt = 1;
-    int radius = 5;
+    int radius = 10;
     int x_pos, y_pos;
 
     //double maxSpeed;
