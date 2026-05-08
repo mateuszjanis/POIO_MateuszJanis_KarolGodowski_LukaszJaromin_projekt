@@ -24,7 +24,7 @@ public:
 	void update();
 	int placeRobot(int x, int y);
 	int placeObstacle(int x, int y);
-	void moveRobot(int id, int moveX, int moveY);
+	void moveRobot(int id, std::vector<int> move);
 	void clearRobot(int id);
 
 private:

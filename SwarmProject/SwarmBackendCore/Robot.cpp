@@ -268,8 +268,8 @@ vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
             int dx = i - x_pos;
             int dy = j - y_pos;
 
-            ForceX += ForceX_component(i, j, obj_map[i][j]);
-            ForceY += ForceY_component(i, j, obj_map[i][j]);
+            ForceX += ForceX_component(dx, dy, obj_map[i][j]);
+            ForceY += ForceY_component(dx, dy, obj_map[i][j]);
         }
     }
 
