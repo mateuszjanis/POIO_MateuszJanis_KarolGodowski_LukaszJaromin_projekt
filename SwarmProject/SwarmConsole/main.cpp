@@ -43,7 +43,7 @@ int main() {
 	for (int i = 0; i < 100; i++)
 	{
 		system("CLS");
-		cout << "=============" << " SYMULACJA " << "=============\n";
+		cout << "=============" << " SYMULACJA " << "==============\n";
 		mapa.show();
 		mapa.showRobotPos();
 		mapa.update();
