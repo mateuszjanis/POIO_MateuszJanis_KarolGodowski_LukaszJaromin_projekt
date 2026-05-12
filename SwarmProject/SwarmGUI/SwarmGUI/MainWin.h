@@ -235,6 +235,7 @@ namespace SwarmGUI {
 			this->buttonStep->TabIndex = 5;
 			this->buttonStep->Text = L"Krok";
 			this->buttonStep->UseVisualStyleBackColor = true;
+			this->buttonStep->Click += gcnew System::EventHandler(this, &MainWin::buttonStep_Click);
 			// 
 			// numericX
 			// 
@@ -409,6 +410,12 @@ private: System::Void pictureBoxMap_Paint(System::Object^ sender, System::Window
 			g->DrawRectangle(Pens::Gray, rect);
 		}
 	}
+}
+private: System::Void buttonStep_Click(System::Object^ sender, System::EventArgs^ e) {
+	mapa->update();
+	pictureBoxMap->Refresh();
+
+	labelStatus->Text = L"Wykonano krok symulacji";
 }
 };
 }
