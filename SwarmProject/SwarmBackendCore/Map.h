@@ -27,6 +27,8 @@ public:
 	void moveRobot(int id, std::vector<int> move);
 	void clearRobot(int id);
 
+	int get_obstacle_num();
+
 private:
 
 };

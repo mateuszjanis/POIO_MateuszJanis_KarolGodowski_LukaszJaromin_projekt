@@ -189,20 +189,24 @@ void Map::moveRobot(int id, vector<int> move)
 		{
 			if (move[0] < 0)
 			{
-				xtemp + 1;
+				//xtemp + 1;
+				xtemp = xtemp + 1;
 			}
 			else if (move[0] > 0)
 			{
-				xtemp - 1;
+				//xtemp - 1;
+				xtemp = xtemp - 1;
 			}
 
 			if (move[1] < 0)
 			{
-				ytemp + 1;
+				//ytemp + 1;
+				ytemp = ytemp + 1;
 			}
 			else if (move[1] > 0)
 			{
-				ytemp - 1;
+				//ytemp - 1;
+				ytemp = ytemp - 1;
 			}
 
 		}
@@ -230,5 +234,21 @@ void Map::update()
 
 		id++;
 	}
+}
+
+int Map::get_obstacle_num()
+{
+	int count = 0;
+
+	for (int x = 0; x < size_x; x++)
+	{
+		for (int y = 0; y < size_y; y++)
+		{
+			if (obj_map[x][y] == 1)
+				count++;
+		}
+	}
+
+	return count - 76;
 }
 

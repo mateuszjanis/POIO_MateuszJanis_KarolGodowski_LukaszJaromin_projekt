@@ -66,6 +66,12 @@ namespace SwarmGUI {
 	private: System::Windows::Forms::Button^ buttonAddRobot;
 	private: System::Windows::Forms::Button^ buttonAddObstackle;
 	private: System::Windows::Forms::Label^ labelStatus;
+	private: System::Windows::Forms::Timer^ timerSimulation;
+	private: System::Windows::Forms::Label^ labelRobotsCount;
+	private: System::Windows::Forms::Label^ labelObstaclesCount;
+	private: System::Windows::Forms::ToolStripMenuItem^ krokToolStripMenuItem;
+
+	private: System::ComponentModel::IContainer^ components;
 
 
 
@@ -75,7 +81,7 @@ namespace SwarmGUI {
 		/// <summary>
 		/// Wymagana zmienna projektanta.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -84,6 +90,7 @@ namespace SwarmGUI {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWin::typeid));
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->plikToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -107,6 +114,10 @@ namespace SwarmGUI {
 			this->buttonAddRobot = (gcnew System::Windows::Forms::Button());
 			this->buttonAddObstackle = (gcnew System::Windows::Forms::Button());
 			this->labelStatus = (gcnew System::Windows::Forms::Label());
+			this->timerSimulation = (gcnew System::Windows::Forms::Timer(this->components));
+			this->labelRobotsCount = (gcnew System::Windows::Forms::Label());
+			this->labelObstaclesCount = (gcnew System::Windows::Forms::Label());
+			this->krokToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menuStrip1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBoxMap))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericX))->BeginInit();
@@ -141,9 +152,9 @@ namespace SwarmGUI {
 			// 
 			// symulacjaToolStripMenuItem
 			// 
-			this->symulacjaToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+			this->symulacjaToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
 				this->startToolStripMenuItem,
-					this->stopToolStripMenuItem, this->resetToolStripMenuItem
+					this->stopToolStripMenuItem, this->resetToolStripMenuItem, this->krokToolStripMenuItem
 			});
 			this->symulacjaToolStripMenuItem->Name = L"symulacjaToolStripMenuItem";
 			this->symulacjaToolStripMenuItem->Size = System::Drawing::Size(73, 20);
@@ -152,20 +163,23 @@ namespace SwarmGUI {
 			// startToolStripMenuItem
 			// 
 			this->startToolStripMenuItem->Name = L"startToolStripMenuItem";
-			this->startToolStripMenuItem->Size = System::Drawing::Size(102, 22);
+			this->startToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->startToolStripMenuItem->Text = L"Start";
+			this->startToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::startToolStripMenuItem_Click);
 			// 
 			// stopToolStripMenuItem
 			// 
 			this->stopToolStripMenuItem->Name = L"stopToolStripMenuItem";
-			this->stopToolStripMenuItem->Size = System::Drawing::Size(102, 22);
+			this->stopToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->stopToolStripMenuItem->Text = L"Stop";
+			this->stopToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::stopToolStripMenuItem_Click);
 			// 
 			// resetToolStripMenuItem
 			// 
 			this->resetToolStripMenuItem->Name = L"resetToolStripMenuItem";
-			this->resetToolStripMenuItem->Size = System::Drawing::Size(102, 22);
+			this->resetToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->resetToolStripMenuItem->Text = L"Reset";
+			this->resetToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::resetToolStripMenuItem_Click);
 			// 
 			// pomocToolStripMenuItem
 			// 
@@ -182,6 +196,7 @@ namespace SwarmGUI {
 			this->oProgramieToolStripMenuItem->Name = L"oProgramieToolStripMenuItem";
 			this->oProgramieToolStripMenuItem->Size = System::Drawing::Size(141, 22);
 			this->oProgramieToolStripMenuItem->Text = L"O programie";
+			this->oProgramieToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::oProgramieToolStripMenuItem_Click);
 			// 
 			// oAutorachToolStripMenuItem
 			// 
@@ -208,6 +223,7 @@ namespace SwarmGUI {
 			this->buttonStart->TabIndex = 2;
 			this->buttonStart->Text = L"Start";
 			this->buttonStart->UseVisualStyleBackColor = true;
+			this->buttonStart->Click += gcnew System::EventHandler(this, &MainWin::buttonStart_Click);
 			// 
 			// buttonStop
 			// 
@@ -217,6 +233,7 @@ namespace SwarmGUI {
 			this->buttonStop->TabIndex = 3;
 			this->buttonStop->Text = L"Stop";
 			this->buttonStop->UseVisualStyleBackColor = true;
+			this->buttonStop->Click += gcnew System::EventHandler(this, &MainWin::buttonStop_Click);
 			// 
 			// buttonReset
 			// 
@@ -226,6 +243,7 @@ namespace SwarmGUI {
 			this->buttonReset->TabIndex = 4;
 			this->buttonReset->Text = L"Reset";
 			this->buttonReset->UseVisualStyleBackColor = true;
+			this->buttonReset->Click += gcnew System::EventHandler(this, &MainWin::buttonReset_Click);
 			// 
 			// buttonStep
 			// 
@@ -296,17 +314,49 @@ namespace SwarmGUI {
 			// labelStatus
 			// 
 			this->labelStatus->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->labelStatus->Location = System::Drawing::Point(43, 679);
+			this->labelStatus->Location = System::Drawing::Point(20, 679);
 			this->labelStatus->Name = L"labelStatus";
-			this->labelStatus->Size = System::Drawing::Size(119, 18);
+			this->labelStatus->Size = System::Drawing::Size(159, 18);
 			this->labelStatus->TabIndex = 12;
 			this->labelStatus->Text = L"Status: gotowe";
+			// 
+			// timerSimulation
+			// 
+			this->timerSimulation->Interval = 800;
+			this->timerSimulation->Tick += gcnew System::EventHandler(this, &MainWin::timerSimulation_Tick);
+			// 
+			// labelRobotsCount
+			// 
+			this->labelRobotsCount->AutoSize = true;
+			this->labelRobotsCount->Location = System::Drawing::Point(235, 679);
+			this->labelRobotsCount->Name = L"labelRobotsCount";
+			this->labelRobotsCount->Size = System::Drawing::Size(53, 13);
+			this->labelRobotsCount->TabIndex = 13;
+			this->labelRobotsCount->Text = L"Roboty: 0";
+			// 
+			// labelObstaclesCount
+			// 
+			this->labelObstaclesCount->AutoSize = true;
+			this->labelObstaclesCount->Location = System::Drawing::Point(341, 679);
+			this->labelObstaclesCount->Name = L"labelObstaclesCount";
+			this->labelObstaclesCount->Size = System::Drawing::Size(73, 13);
+			this->labelObstaclesCount->TabIndex = 14;
+			this->labelObstaclesCount->Text = L"Przeszkody: 0";
+			// 
+			// krokToolStripMenuItem
+			// 
+			this->krokToolStripMenuItem->Name = L"krokToolStripMenuItem";
+			this->krokToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->krokToolStripMenuItem->Text = L"Krok";
+			this->krokToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::krokToolStripMenuItem_Click);
 			// 
 			// MainWin
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(558, 706);
+			this->Controls->Add(this->labelObstaclesCount);
+			this->Controls->Add(this->labelRobotsCount);
 			this->Controls->Add(this->labelStatus);
 			this->Controls->Add(this->buttonAddObstackle);
 			this->Controls->Add(this->buttonAddRobot);
@@ -364,7 +414,11 @@ private: System::Void buttonAddRobot_Click(System::Object^ sender, System::Event
 			labelStatus->Text = L"Nie mo¿na dodaæ robota";
 
 		pictureBoxMap->Refresh();
+
+		labelRobotsCount->Text =
+			L"Roboty: " + Convert::ToString(mapa->getRobotNum());
 }
+
 private: System::Void buttonAddObstackle_Click(System::Object^ sender, System::EventArgs^ e) {
 	int x = Convert::ToInt32(numericX->Value);
 	int y = Convert::ToInt32(numericY->Value);
@@ -378,6 +432,9 @@ private: System::Void buttonAddObstackle_Click(System::Object^ sender, System::E
 		labelStatus->Text = L"Nie mo¿na dodaæ przeszkody";
 
 		pictureBoxMap->Refresh();
+
+		labelObstaclesCount->Text =
+			L"Przeszkody: " + Convert::ToString(mapa->getObstacleNum());
 }
 
 
@@ -416,6 +473,58 @@ private: System::Void buttonStep_Click(System::Object^ sender, System::EventArgs
 	pictureBoxMap->Refresh();
 
 	labelStatus->Text = L"Wykonano krok symulacji";
+}
+private: System::Void timerSimulation_Tick(System::Object^ sender, System::EventArgs^ e) {
+	mapa->update();
+	pictureBoxMap->Refresh();
+
+	labelStatus->Text = L"Symulacja dzia³a";
+}
+private: System::Void buttonStart_Click(System::Object^ sender, System::EventArgs^ e) {
+	timerSimulation->Start();
+	labelStatus->Text = L"Start symulacji";
+}
+private: System::Void buttonStop_Click(System::Object^ sender, System::EventArgs^ e) {
+	timerSimulation->Stop();
+	labelStatus->Text = L"Stop symulacji";
+}
+private: System::Void buttonReset_Click(System::Object^ sender, System::EventArgs^ e) {
+	delete mapa;
+
+	mapa = new WrapperMap(20, 20);
+
+	pictureBoxMap->Refresh();
+
+	labelStatus->Text = L"Zresetowano plansze";
+
+	labelRobotsCount->Text = L"Roboty: 0";
+	labelObstaclesCount->Text = L"Przeszkody: 0";
+}
+private: System::Void oProgramieToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	MessageBox::Show(
+		L"Nasz program sluzy do wizualizacji symulacji roju robotow na mapie.\n\n"
+		L"Mo¿emy dodawaæ na planszy roboty i przeszkody w wybranych miejscach, "
+		L"uruchamiaæ symulacjê, zatrzymywaæ j¹ oraz wykonywaæ pojedyncze kroki.\n\n"
+		L"Plansza pokazuje:\n"
+		L"- czarne pola: przeszkody i granice mapy\n"
+		L"- czerwone kolka: roboty\n",
+		L"O programie",
+		MessageBoxButtons::OK,
+		MessageBoxIcon::Information
+	);
+}
+private: System::Void startToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+	buttonStart_Click(sender, e);
+}
+private: System::Void stopToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+	buttonStop_Click(sender, e);
+}
+private: System::Void resetToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+	buttonReset_Click(sender, e);
+}
+private: System::Void krokToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+	buttonStep_Click(sender, e);
 }
 };
 }

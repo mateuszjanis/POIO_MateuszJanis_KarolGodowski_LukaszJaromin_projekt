@@ -135,3 +135,13 @@ int WrapperMap::getSizeY()
 {
 	return mapa->get_size_y();
 }
+
+int WrapperMap::getRobotNum()
+{
+	return mapa->get_robot_num();
+}
+
+int WrapperMap::getObstacleNum()
+{
+	return mapa->get_obstacle_num();
+}

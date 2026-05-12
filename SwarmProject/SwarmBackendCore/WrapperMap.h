@@ -18,6 +18,9 @@ public:
 	int getSizeX();
 	int getSizeY();
 
+	int getRobotNum();
+	int getObstacleNum();
+
 private:
 
 };
