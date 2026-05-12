@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "Robot.h"
+#include <cstdlib>
+#include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -96,10 +99,44 @@ vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
             ForceY += ForceY_component(dx, dy, obj_map[i][j]);
         }
     }
+    move[0] = static_cast<int>(round(ForceX * dt * dt));
+    move[1] = static_cast<int>(round(ForceY * dt * dt));
 
-    move[0] = round(ForceX * dt * dt);
-    move[1] = round(ForceY * dt * dt); // policzenie przemieszczenia
+    // Ruch maksymalnie o jedno pole, zeby robot nie przeskakiwal przez przeszkody.
+    if (move[0] > 1) move[0] = 1;
+    if (move[0] < -1) move[0] = -1;
+
+    if (move[1] > 1) move[1] = 1;
+    if (move[1] < -1) move[1] = -1;
+
+    // Jezeli pole potencjalne sie wyzerowalo, dodajemy losowy ruch eksploracyjny.
+    // Bez tego robot czesto zatrzymuje sie po pierwszym kroku.
+    if (move[0] == 0 && move[1] == 0)
+    {
+        int direction = rand() % 4;
+
+        switch (direction)
+        {
+        case 0:
+            move[0] = 1;
+            move[1] = 0;
+            break;
+        case 1:
+            move[0] = -1;
+            move[1] = 0;
+            break;
+        case 2:
+            move[0] = 0;
+            move[1] = 1;
+            break;
+        case 3:
+            move[0] = 0;
+            move[1] = -1;
+            break;
+        }
+    }
 
     return move;
+
 
 };

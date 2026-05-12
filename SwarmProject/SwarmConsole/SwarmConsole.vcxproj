@@ -142,9 +142,11 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Simulation.h" />
     <ClInclude Include="WrapperMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="WrapperMap.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

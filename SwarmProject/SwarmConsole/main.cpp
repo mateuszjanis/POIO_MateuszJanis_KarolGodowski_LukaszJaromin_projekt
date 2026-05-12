@@ -4,9 +4,17 @@
 #include <thread>
 #include <chrono>
 
+#include "Simulation.h"
+#include <ctime>
+
+
+
+
 using namespace std;
 
 int main() {
+
+	srand(static_cast<unsigned int>(time(nullptr)));
 
 	int x, y, obstacleCount, robotCount;
 
@@ -40,16 +48,18 @@ int main() {
 		}
 	}
 	
-	for (int i = 0; i < 100; i++)
-	{
-		system("CLS");
-		cout << "=============" << " SYMULACJA " << "==============\n";
-		mapa.show();
-		mapa.showRobotPos();
-		mapa.update();
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-		
-	}
+	SimulationSettings settings;
+
+	cout << endl << "Podaj liczbe krokow symulacji: ";
+	cin >> settings.stepCount;
+
+	cout << "Podaj opoznienie miedzy krokami [ms]: ";
+	cin >> settings.delayMs;
+
+	settings.showRobotPositions = true;
+
+	Simulation simulation(mapa, settings);
+	simulation.run();
 
 	return 0;
 }

@@ -17,31 +17,34 @@ Map::Map(int x_len, int y_len)
 	this -> resize(x_len, y_len);
 }
 
-void Map::resize(int x_len, int y_len) {
-
+void Map::resize(int x_len, int y_len)
+{
 	size_x = x_len;
 	size_y = y_len;
-	obj_map.resize(x_len);
-	for (int i = 0; i < x_len; i++) {
 
-		obj_map[i].resize(y_len);
+	obj_map.clear();
+	obj_map.resize(size_x);
 
+	for (int i = 0; i < size_x; i++)
+	{
+		obj_map[i].resize(size_y);
 	}
 
-	for (int i = 0; i < x_len; i++) {
-		for (int j = 0; j < x_len; j++) {
-			if (i == 0 || i == x_len - 1 || j == 0 || j == y_len - 1)
+	for (int i = 0; i < size_x; i++)
+	{
+		for (int j = 0; j < size_y; j++)
+		{
+			if (i == 0 || i == size_x - 1 || j == 0 || j == size_y - 1)
 			{
-				obj_map[i][j] = 1; // przeszkoda
+				obj_map[i][j] = 1;
 			}
 			else
 			{
-				obj_map[i][j] = 0; // puste pole
+				obj_map[i][j] = 0;
 			}
 		}
 	}
 }
-
 int Map::get_size_x() {
 	
 	return size_x;
@@ -63,7 +66,7 @@ vector<int> Map::get_robot_pos(int id)
 {
 	vector<int> position(2);
 	position[0] = robot_list[id].getPosX();
-	position[1] = robot_list[id].getPosX();
+	position[1] = robot_list[id].getPosY();
 
 	return position;
 }
@@ -158,63 +161,29 @@ void Map::clearRobot(int id)
 
 void Map::moveRobot(int id, vector<int> move)
 {
-	int xtemp = robot_list[id].getPosX() + move[0];
-	int ytemp = robot_list[id].getPosY() + move[1];
+	int oldX = robot_list[id].getPosX();
+	int oldY = robot_list[id].getPosY();
 
-	// Dojechanie do granic
-	if (xtemp <= 0)
+	int xtemp = oldX + move[0];
+	int ytemp = oldY + move[1];
+
+	// Robot nie powinien wjezdzac w sciane brzegowa.
+	if (xtemp <= 0) xtemp = 1;
+	else if (xtemp >= size_x - 1) xtemp = size_x - 2;
+
+	if (ytemp <= 0) ytemp = 1;
+	else if (ytemp >= size_y - 1) ytemp = size_y - 2;
+
+	// Jezeli pole docelowe jest zajete, robot zostaje w miejscu.
+	// To jest bezpieczniejsze niz petla while, ktora mogla sie zawieszac.
+	if (obj_map[xtemp][ytemp] != 0)
 	{
-		xtemp = 0;
-	}
-	else if (xtemp >= size_x - 1)
-	{
-		xtemp = size_x - 1;
-	}
-
-	if (ytemp <= 0)
-	{
-		ytemp = 0;
-	}
-	else if (ytemp >= size_y - 1)
-	{
-		ytemp = size_y - 1;
-	}
-
-	// Natrafienie na obiekt
-	bool checkObstacle = 1;
-
-	while (checkObstacle)
-	{
-		if (obj_map[xtemp][ytemp] != 0)
-		{
-			if (move[0] < 0)
-			{
-				xtemp + 1;
-			}
-			else if (move[0] > 0)
-			{
-				xtemp - 1;
-			}
-
-			if (move[1] < 0)
-			{
-				ytemp + 1;
-			}
-			else if (move[1] > 0)
-			{
-				ytemp - 1;
-			}
-
-		}
-		else
-		{
-			checkObstacle = 0;
-		}
+		xtemp = oldX;
+		ytemp = oldY;
 	}
 
-	robot_list[id].setPosition(xtemp, ytemp); // czy działam na kopii czy na obiekcie ?????
+	robot_list[id].setPosition(xtemp, ytemp);
 	obj_map[xtemp][ytemp] = 2;
-
 }
 
 void Map::update()
