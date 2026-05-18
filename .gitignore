@@ -1,0 +1,42 @@
+# Build
+/x64/
+/x86/
+/Debug/
+/Release/
+/build/
+/out/
+
+# Binaries
+*.exe
+*.dll
+*.lib
+*.obj
+*.o
+*.pdb
+*.ilk
+*.exp
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# IntelliSense
+*.ipch
+*.aps
+*.ncb
+*.opendb
+*.VC.db
+
+# Logs & temp
+*.log
+*.tmp
+*.temp
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
