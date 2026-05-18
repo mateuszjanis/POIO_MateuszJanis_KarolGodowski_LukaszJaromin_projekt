@@ -30,6 +30,15 @@ namespace SwarmGUI {
 			//
 		}
 
+	private: void updateRobotTable()
+	{
+		for (int i = 0; i < mapa->getRobotNum(); i++)
+		{
+			dataGridRobots->Rows[i]->Cells[1]->Value =
+				Convert::ToString(mapa->getRobotMoveCount(i));
+		}
+	}
+
 	protected:
 		/// <summary>
 		/// Wyczyœæ wszystkie u¿ywane zasoby.
@@ -70,6 +79,10 @@ namespace SwarmGUI {
 	private: System::Windows::Forms::Label^ labelRobotsCount;
 	private: System::Windows::Forms::Label^ labelObstaclesCount;
 	private: System::Windows::Forms::ToolStripMenuItem^ krokToolStripMenuItem;
+	private: System::Windows::Forms::DataGridView^ dataGridRobots;
+
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnRobotID;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnMoveCount;
 
 	private: System::ComponentModel::IContainer^ components;
 
@@ -99,6 +112,7 @@ namespace SwarmGUI {
 			this->startToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->stopToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->resetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->krokToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pomocToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->oProgramieToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->oAutorachToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -117,11 +131,14 @@ namespace SwarmGUI {
 			this->timerSimulation = (gcnew System::Windows::Forms::Timer(this->components));
 			this->labelRobotsCount = (gcnew System::Windows::Forms::Label());
 			this->labelObstaclesCount = (gcnew System::Windows::Forms::Label());
-			this->krokToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dataGridRobots = (gcnew System::Windows::Forms::DataGridView());
+			this->columnRobotID = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->columnMoveCount = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->menuStrip1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBoxMap))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericX))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericY))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridRobots))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menuStrip1
@@ -132,7 +149,7 @@ namespace SwarmGUI {
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(558, 24);
+			this->menuStrip1->Size = System::Drawing::Size(919, 24);
 			this->menuStrip1->TabIndex = 0;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -146,7 +163,7 @@ namespace SwarmGUI {
 			// zamknijToolStripMenuItem
 			// 
 			this->zamknijToolStripMenuItem->Name = L"zamknijToolStripMenuItem";
-			this->zamknijToolStripMenuItem->Size = System::Drawing::Size(117, 22);
+			this->zamknijToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->zamknijToolStripMenuItem->Text = L"Zamknij";
 			this->zamknijToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::zamknijToolStripMenuItem_Click);
 			// 
@@ -163,23 +180,30 @@ namespace SwarmGUI {
 			// startToolStripMenuItem
 			// 
 			this->startToolStripMenuItem->Name = L"startToolStripMenuItem";
-			this->startToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->startToolStripMenuItem->Size = System::Drawing::Size(102, 22);
 			this->startToolStripMenuItem->Text = L"Start";
 			this->startToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::startToolStripMenuItem_Click);
 			// 
 			// stopToolStripMenuItem
 			// 
 			this->stopToolStripMenuItem->Name = L"stopToolStripMenuItem";
-			this->stopToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->stopToolStripMenuItem->Size = System::Drawing::Size(102, 22);
 			this->stopToolStripMenuItem->Text = L"Stop";
 			this->stopToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::stopToolStripMenuItem_Click);
 			// 
 			// resetToolStripMenuItem
 			// 
 			this->resetToolStripMenuItem->Name = L"resetToolStripMenuItem";
-			this->resetToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->resetToolStripMenuItem->Size = System::Drawing::Size(102, 22);
 			this->resetToolStripMenuItem->Text = L"Reset";
 			this->resetToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::resetToolStripMenuItem_Click);
+			// 
+			// krokToolStripMenuItem
+			// 
+			this->krokToolStripMenuItem->Name = L"krokToolStripMenuItem";
+			this->krokToolStripMenuItem->Size = System::Drawing::Size(102, 22);
+			this->krokToolStripMenuItem->Text = L"Krok";
+			this->krokToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::krokToolStripMenuItem_Click);
 			// 
 			// pomocToolStripMenuItem
 			// 
@@ -322,7 +346,7 @@ namespace SwarmGUI {
 			// 
 			// timerSimulation
 			// 
-			this->timerSimulation->Interval = 800;
+			this->timerSimulation->Interval = 500;
 			this->timerSimulation->Tick += gcnew System::EventHandler(this, &MainWin::timerSimulation_Tick);
 			// 
 			// labelRobotsCount
@@ -343,18 +367,39 @@ namespace SwarmGUI {
 			this->labelObstaclesCount->TabIndex = 14;
 			this->labelObstaclesCount->Text = L"Przeszkody: 0";
 			// 
-			// krokToolStripMenuItem
+			// dataGridRobots
 			// 
-			this->krokToolStripMenuItem->Name = L"krokToolStripMenuItem";
-			this->krokToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-			this->krokToolStripMenuItem->Text = L"Krok";
-			this->krokToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::krokToolStripMenuItem_Click);
+			this->dataGridRobots->AllowUserToAddRows = false;
+			this->dataGridRobots->AllowUserToDeleteRows = false;
+			this->dataGridRobots->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridRobots->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {
+				this->columnRobotID,
+					this->columnMoveCount
+			});
+			this->dataGridRobots->Location = System::Drawing::Point(568, 40);
+			this->dataGridRobots->Name = L"dataGridRobots";
+			this->dataGridRobots->ReadOnly = true;
+			this->dataGridRobots->Size = System::Drawing::Size(243, 500);
+			this->dataGridRobots->TabIndex = 15;
+			// 
+			// columnRobotID
+			// 
+			this->columnRobotID->HeaderText = L"Nr robota";
+			this->columnRobotID->Name = L"columnRobotID";
+			this->columnRobotID->ReadOnly = true;
+			// 
+			// columnMoveCount
+			// 
+			this->columnMoveCount->HeaderText = L"Liczba ruchów";
+			this->columnMoveCount->Name = L"columnMoveCount";
+			this->columnMoveCount->ReadOnly = true;
 			// 
 			// MainWin
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(558, 706);
+			this->ClientSize = System::Drawing::Size(919, 706);
+			this->Controls->Add(this->dataGridRobots);
 			this->Controls->Add(this->labelObstaclesCount);
 			this->Controls->Add(this->labelRobotsCount);
 			this->Controls->Add(this->labelStatus);
@@ -379,6 +424,7 @@ namespace SwarmGUI {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBoxMap))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericX))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericY))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridRobots))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -408,8 +454,15 @@ private: System::Void buttonAddRobot_Click(System::Object^ sender, System::Event
 
 	int wynik = mapa->placeRobot(x, y); 
 
-		if (wynik == 0)
-			labelStatus->Text = L"Dodano robota";
+	if (wynik == 0)
+	{
+		labelStatus->Text = L"Dodano robota";
+
+		dataGridRobots->Rows->Add(
+			Convert::ToString(mapa->getRobotNum()),
+			"0"
+		);
+	}
 		else
 			labelStatus->Text = L"Nie mo¿na dodaæ robota";
 
@@ -417,6 +470,8 @@ private: System::Void buttonAddRobot_Click(System::Object^ sender, System::Event
 
 		labelRobotsCount->Text =
 			L"Roboty: " + Convert::ToString(mapa->getRobotNum());
+
+
 }
 
 private: System::Void buttonAddObstackle_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -449,6 +504,8 @@ private: System::Void pictureBoxMap_Paint(System::Object^ sender, System::Window
 	int cellW = pictureBoxMap->Width / sizeX;
 	int cellH = pictureBoxMap->Height / sizeY;
 
+	int robotID = 0;
+
 	for (int x = 0; x < sizeX; x++)
 	{
 		for (int y = 0; y < sizeY; y++)
@@ -459,24 +516,65 @@ private: System::Void pictureBoxMap_Paint(System::Object^ sender, System::Window
 				g->FillRectangle(Brushes::White, rect);
 			else if (obj_map[x][y] == 1)
 				g->FillRectangle(Brushes::Black, rect);
-			else if (obj_map[x][y] == 2)
-			{
-				Rectangle robotRect(x * cellW + cellW / 4 , y * cellH + cellH / 4, cellW / 2, cellH / 2);
-				g->FillEllipse(Brushes::Red, robotRect);
-			}
+			//else if (obj_map[x][y] == 2)
+			//{
+			//	Rectangle robotRect(x * cellW + cellW / 4 , y * cellH + cellH / 4, cellW / 2, cellH / 2);
+			//	g->FillEllipse(Brushes::Red, robotRect);
+
+			//	String^ text = Convert::ToString(robotID + 1);
+
+			//	g->DrawString(
+			//		text,
+			//		gcnew Drawing::Font("Arial", 8),
+			//		Brushes::White,
+			//		x * cellW + cellW / 4,
+			//		y * cellH + cellH / 4
+			//	);
+
+			//	robotID++;
+			//}
 			g->DrawRectangle(Pens::Gray, rect);
 		}
 	}
+	for (int i = 0; i < mapa->getRobotNum(); i++)
+	{
+		std::vector<int> pos = mapa->getRobotPos(i);
+
+		int x = pos[0];
+		int y = pos[1];
+
+		Rectangle robotRect(
+			x * cellW + 2,
+			y * cellH + 2,
+			cellW - 4,
+			cellH - 4
+		);
+
+		g->FillEllipse(Brushes::Red, robotRect);
+
+		String^ text = Convert::ToString(i + 1);
+
+		g->DrawString(
+			text,
+			gcnew Drawing::Font("Arial", 8),
+			Brushes::White,
+			x * cellW + cellW / 4,
+			y * cellH + cellH / 4
+		);
+	}
 }
+
 private: System::Void buttonStep_Click(System::Object^ sender, System::EventArgs^ e) {
 	mapa->update();
 	pictureBoxMap->Refresh();
+	updateRobotTable();
 
 	labelStatus->Text = L"Wykonano krok symulacji";
 }
 private: System::Void timerSimulation_Tick(System::Object^ sender, System::EventArgs^ e) {
 	mapa->update();
 	pictureBoxMap->Refresh();
+	updateRobotTable();
 
 	labelStatus->Text = L"Symulacja dzia³a";
 }
@@ -489,9 +587,14 @@ private: System::Void buttonStop_Click(System::Object^ sender, System::EventArgs
 	labelStatus->Text = L"Stop symulacji";
 }
 private: System::Void buttonReset_Click(System::Object^ sender, System::EventArgs^ e) {
+	
+	timerSimulation->Stop();
+	
 	delete mapa;
 
 	mapa = new WrapperMap(20, 20);
+
+	dataGridRobots->Rows->Clear();
 
 	pictureBoxMap->Refresh();
 
@@ -499,6 +602,8 @@ private: System::Void buttonReset_Click(System::Object^ sender, System::EventArg
 
 	labelRobotsCount->Text = L"Roboty: 0";
 	labelObstaclesCount->Text = L"Przeszkody: 0";
+
+	
 }
 private: System::Void oProgramieToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 
@@ -526,5 +631,7 @@ private: System::Void resetToolStripMenuItem_Click(System::Object^ sender, Syste
 private: System::Void krokToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	buttonStep_Click(sender, e);
 }
+
+
 };
 }

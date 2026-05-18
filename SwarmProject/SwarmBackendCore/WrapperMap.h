@@ -21,6 +21,11 @@ public:
 	int getRobotNum();
 	int getObstacleNum();
 
+	// do liczenia ruchow robota
+	int getRobotMoveCount(int id);
+
+	std::vector<int> getRobotPos(int id);
+
 private:
 
 };

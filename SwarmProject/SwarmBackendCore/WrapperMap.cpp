@@ -145,3 +145,14 @@ int WrapperMap::getObstacleNum()
 {
 	return mapa->get_obstacle_num();
 }
+
+// do liczenia ruchow robota
+int WrapperMap::getRobotMoveCount(int id)
+{
+	return mapa->get_robot_move_count(id);
+}
+
+std::vector<int> WrapperMap::getRobotPos(int id)
+{
+	return mapa->get_robot_pos(id);
+}

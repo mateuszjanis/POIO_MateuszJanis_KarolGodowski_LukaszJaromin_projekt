@@ -29,6 +29,9 @@ public:
 
 	int get_obstacle_num();
 
+	// do liczenia ruchow roobta
+	int get_robot_move_count(int id);
+
 private:
 
 };

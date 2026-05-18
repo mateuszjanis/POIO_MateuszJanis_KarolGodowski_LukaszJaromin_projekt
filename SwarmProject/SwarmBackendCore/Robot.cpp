@@ -30,6 +30,19 @@ double Robot::getRadius()
     return radius;
 }
 
+// do liczenia przemieszczen robotow
+int Robot::getMoveCount()
+{
+    return moveCount;
+}
+
+void Robot::increaseMoveCount()
+{
+    moveCount++;
+}
+//
+
+
 double Robot::ForceX_component(int dx, int dy, int currObj)
 {
     double ForceComponent = 0;
@@ -103,3 +116,4 @@ vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
     return move;
 
 };
+
