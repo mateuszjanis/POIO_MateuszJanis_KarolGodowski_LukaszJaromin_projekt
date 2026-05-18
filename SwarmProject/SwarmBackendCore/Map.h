@@ -32,6 +32,9 @@ public:
 	// do liczenia ruchow roobta
 	int get_robot_move_count(int id);
 
+	int get_robot_last_move_x(int id);
+	int get_robot_last_move_y(int id);
+
 private:
 
 };

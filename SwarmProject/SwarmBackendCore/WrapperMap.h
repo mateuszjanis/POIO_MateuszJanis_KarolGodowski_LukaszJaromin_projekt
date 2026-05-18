@@ -26,6 +26,9 @@ public:
 
 	std::vector<int> getRobotPos(int id);
 
+	int getRobotLastMoveX(int id);
+	int getRobotLastMoveY(int id);
+
 private:
 
 };

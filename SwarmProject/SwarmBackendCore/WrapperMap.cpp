@@ -156,3 +156,13 @@ std::vector<int> WrapperMap::getRobotPos(int id)
 {
 	return mapa->get_robot_pos(id);
 }
+
+int WrapperMap::getRobotLastMoveX(int id)
+{
+	return mapa->get_robot_last_move_x(id);
+}
+
+int WrapperMap::getRobotLastMoveY(int id)
+{
+	return mapa->get_robot_last_move_y(id);
+}

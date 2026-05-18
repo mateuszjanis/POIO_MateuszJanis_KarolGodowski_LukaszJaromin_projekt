@@ -12,6 +12,9 @@ private:
     int x_pos, y_pos;
 
     int moveCount = 0; //
+    
+    int lastMoveX = 0;
+    int lastMoveY = 0;
 
 public:
     Robot(int x, int y);
@@ -26,6 +29,9 @@ public:
     int getMoveCount(); 
     void increaseMoveCount(); 
     //
+
+    int getLastMoveX();
+    int getLastMoveY();
 
 private:
     double ForceX_component(int dx, int dy, int currObj);

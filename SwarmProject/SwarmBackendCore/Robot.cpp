@@ -42,6 +42,16 @@ void Robot::increaseMoveCount()
 }
 //
 
+int Robot::getLastMoveX()
+{
+    return lastMoveX;
+}
+
+int Robot::getLastMoveY()
+{
+    return lastMoveY;
+}
+
 
 double Robot::ForceX_component(int dx, int dy, int currObj)
 {
@@ -112,6 +122,9 @@ vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
 
     move[0] = round(ForceX * dt * dt);
     move[1] = round(ForceY * dt * dt); // policzenie przemieszczenia
+
+    lastMoveX = move[0];
+    lastMoveY = move[1];
 
     return move;
 

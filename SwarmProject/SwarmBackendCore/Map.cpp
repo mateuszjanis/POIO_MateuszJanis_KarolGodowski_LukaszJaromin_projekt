@@ -264,3 +264,12 @@ int Map::get_obstacle_num()
 	return count - 76;
 }
 
+int Map::get_robot_last_move_x(int id)
+{
+	return robot_list[id].getLastMoveX();
+}
+
+int Map::get_robot_last_move_y(int id)
+{
+	return robot_list[id].getLastMoveY();
+}
