@@ -1,38 +1,35 @@
 #pragma once
 #include "pch.h"
 #include <vector>
+#include <string>
 #include "Robot.h"
 
 class Map
 {
-
-	int size_x, size_y;
-	std::vector<Robot> robot_list;
-	std::vector<std::vector<int>> obj_map; 
+    int size_x, size_y;
+    std::vector<Robot> robot_list;
+    std::vector<std::vector<int>> obj_map;
 
 public:
-	Map();
-	Map(int x_len, int y_len);
+    Map();
+    Map(int x_len, int y_len);
 
-	int get_size_x();
-	int get_size_y();
-	int get_robot_num();
-	std::vector<int> get_robot_pos(int id);
-	std::vector<std::vector<int>> get_map();
+    int get_size_x();
+    int get_size_y();
+    int get_robot_num();
+    std::vector<int> get_robot_pos(int id);
+    std::vector<std::vector<int>> get_map();
 
-	void resize(int x_len, int y_len);
-	void update();
-	int placeRobot(int x, int y);
-	int placeObstacle(int x, int y);
-	void moveRobot(int id, std::vector<int> move);
-	void clearRobot(int id);
+    void resize(int x_len, int y_len);
+    void update();
+    int placeRobot(int x, int y);
+    int placeObstacle(int x, int y);
+    void moveRobot(int id, std::vector<int> move);
+    void clearRobot(int id);
 
-	int get_obstacle_num();
+    int get_obstacle_num();
+    int get_robot_move_count(int id);
 
-	// do liczenia ruchow roobta
-	int get_robot_move_count(int id);
-
-private:
-
+    bool saveToFile(const std::string& fileName);
+    bool loadFromFile(const std::string& fileName);
 };
-

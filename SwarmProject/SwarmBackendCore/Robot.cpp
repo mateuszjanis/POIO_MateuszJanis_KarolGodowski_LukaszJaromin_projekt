@@ -9,6 +9,13 @@ Robot::Robot(int x, int y)
     y_pos = y;
 }
 
+Robot::Robot(int x, int y, int moveCount)
+{
+    x_pos = x;
+    y_pos = y;
+    this->moveCount = moveCount;
+}
+
 void Robot::setPosition(int newX, int newY)
 {
     x_pos = newX;
@@ -30,7 +37,6 @@ double Robot::getRadius()
     return radius;
 }
 
-// do liczenia przemieszczen robotow
 int Robot::getMoveCount()
 {
     return moveCount;
@@ -40,8 +46,11 @@ void Robot::increaseMoveCount()
 {
     moveCount++;
 }
-//
 
+void Robot::setMoveCount(int value)
+{
+    moveCount = value;
+}
 
 double Robot::ForceX_component(int dx, int dy, int currObj)
 {
@@ -53,7 +62,7 @@ double Robot::ForceX_component(int dx, int dy, int currObj)
     }
     else if (dx > 0)
     {
-        ForceComponent = - k * 1 / pow(dx, 2);
+        ForceComponent = -k * 1 / pow(dx, 2);
     }
     else
     {
@@ -61,7 +70,6 @@ double Robot::ForceX_component(int dx, int dy, int currObj)
     }
 
     return ForceComponent;
-
 }
 
 double Robot::ForceY_component(int dx, int dy, int currObj)
@@ -74,7 +82,7 @@ double Robot::ForceY_component(int dx, int dy, int currObj)
     }
     else if (dy > 0)
     {
-        ForceComponent = - k * 1 / pow(dy, 2);
+        ForceComponent = -k * 1 / pow(dy, 2);
     }
     else
     {
@@ -82,7 +90,6 @@ double Robot::ForceY_component(int dx, int dy, int currObj)
     }
 
     return ForceComponent;
-
 }
 
 vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
@@ -111,9 +118,7 @@ vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
     }
 
     move[0] = round(ForceX * dt * dt);
-    move[1] = round(ForceY * dt * dt); // policzenie przemieszczenia
+    move[1] = round(ForceY * dt * dt);
 
     return move;
-
 };
-

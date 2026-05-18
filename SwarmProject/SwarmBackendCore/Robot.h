@@ -11,10 +11,11 @@ private:
     int radius = 10;
     int x_pos, y_pos;
 
-    int moveCount = 0; //
+    int moveCount = 0;
 
 public:
     Robot(int x, int y);
+    Robot(int x, int y, int moveCount);
 
     void setPosition(int x, int y);
     int getPosX();
@@ -22,10 +23,9 @@ public:
     double getRadius();
     std::vector<int> computeMove(std::vector<std::vector<int>> obj_map);
 
-    // do liczenia przemieszczen robotow
-    int getMoveCount(); 
-    void increaseMoveCount(); 
-    //
+    int getMoveCount();
+    void increaseMoveCount();
+    void setMoveCount(int value);
 
 private:
     double ForceX_component(int dx, int dy, int currObj);
