@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "WrapperMap.h"
 #include <iostream>
 #include <vector>
@@ -117,4 +118,41 @@ void WrapperMap::showRobotPos()
 		cout << "Robot "<< i << " x: " << tempRobotPos[0] 
 			<<" y: " << tempRobotPos[1] << endl;
 	}
+}
+
+
+std::vector<std::vector<int>> WrapperMap::getMap()
+{
+	return mapa->get_map();
+}
+
+int WrapperMap::getSizeX()
+{
+	return mapa->get_size_x();
+}
+
+int WrapperMap::getSizeY()
+{
+	return mapa->get_size_y();
+}
+
+int WrapperMap::getRobotNum()
+{
+	return mapa->get_robot_num();
+}
+
+int WrapperMap::getObstacleNum()
+{
+	return mapa->get_obstacle_num();
+}
+
+// do liczenia ruchow robota
+int WrapperMap::getRobotMoveCount(int id)
+{
+	return mapa->get_robot_move_count(id);
+}
+
+std::vector<int> WrapperMap::getRobotPos(int id)
+{
+	return mapa->get_robot_pos(id);
 }

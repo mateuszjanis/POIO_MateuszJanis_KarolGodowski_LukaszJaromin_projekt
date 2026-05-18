@@ -27,6 +27,11 @@ public:
 	void moveRobot(int id, std::vector<int> move);
 	void clearRobot(int id);
 
+	int get_obstacle_num();
+
+	// do liczenia ruchow roobta
+	int get_robot_move_count(int id);
+
 private:
 
 };

@@ -14,6 +14,18 @@ public:
 	void update();
 	void showRobotPos();
 
+	std::vector<std::vector<int>> getMap();
+	int getSizeX();
+	int getSizeY();
+
+	int getRobotNum();
+	int getObstacleNum();
+
+	// do liczenia ruchow robota
+	int getRobotMoveCount(int id);
+
+	std::vector<int> getRobotPos(int id);
+
 private:
 
 };

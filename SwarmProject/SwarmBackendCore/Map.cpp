@@ -59,11 +59,17 @@ int Map::get_robot_num()
 	return robot_list.size();
 }
 
+// do liczenia ruchow robota
+int Map::get_robot_move_count(int id)
+{
+	return robot_list[id].getMoveCount();
+}
+
 vector<int> Map::get_robot_pos(int id)
 {
 	vector<int> position(2);
 	position[0] = robot_list[id].getPosX();
-	position[1] = robot_list[id].getPosX();
+	position[1] = robot_list[id].getPosY();
 
 	return position;
 }
@@ -189,20 +195,24 @@ void Map::moveRobot(int id, vector<int> move)
 		{
 			if (move[0] < 0)
 			{
-				xtemp + 1;
+				//xtemp + 1;
+				xtemp = xtemp + 1;
 			}
 			else if (move[0] > 0)
 			{
-				xtemp - 1;
+				//xtemp - 1;
+				xtemp = xtemp - 1;
 			}
 
 			if (move[1] < 0)
 			{
-				ytemp + 1;
+				//ytemp + 1;
+				ytemp = ytemp + 1;
 			}
 			else if (move[1] > 0)
 			{
-				ytemp - 1;
+				//ytemp - 1;
+				ytemp = ytemp - 1;
 			}
 
 		}
@@ -210,6 +220,12 @@ void Map::moveRobot(int id, vector<int> move)
 		{
 			checkObstacle = 0;
 		}
+	}
+
+	if (robot_list[id].getPosX() != xtemp ||
+		robot_list[id].getPosY() != ytemp)
+	{
+		robot_list[id].increaseMoveCount();
 	}
 
 	robot_list[id].setPosition(xtemp, ytemp); // czy działam na kopii czy na obiekcie ?????
@@ -230,5 +246,21 @@ void Map::update()
 
 		id++;
 	}
+}
+
+int Map::get_obstacle_num()
+{
+	int count = 0;
+
+	for (int x = 0; x < size_x; x++)
+	{
+		for (int y = 0; y < size_y; y++)
+		{
+			if (obj_map[x][y] == 1)
+				count++;
+		}
+	}
+
+	return count - 76;
 }
 

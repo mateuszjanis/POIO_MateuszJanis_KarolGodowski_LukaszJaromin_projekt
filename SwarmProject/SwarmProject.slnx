@@ -7,4 +7,7 @@
   <Project Path="SwarmConsole/SwarmConsole.vcxproj" Id="734cd606-e153-4165-ac43-9d8fe974e766">
     <BuildDependency Project="SwarmBackendCore/SwarmBackendCore.vcxproj" />
   </Project>
+  <Project Path="SwarmGUI/SwarmGUI/SwarmGUI.vcxproj" Id="5cfc947d-34bf-e82c-3fc7-efda325f8500">
+    <BuildDependency Project="SwarmBackendCore/SwarmBackendCore.vcxproj" />
+  </Project>
 </Solution>
