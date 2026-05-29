@@ -32,7 +32,6 @@ double Robot::getRadius()
     return radius;
 }
 
-// do liczenia przemieszczen robotow
 int Robot::getMoveCount()
 {
     return moveCount;
@@ -151,6 +150,4 @@ vector<int> Robot::computeMove()
     }
 
     return move;
-
 };
-

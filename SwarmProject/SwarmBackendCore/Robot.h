@@ -24,10 +24,9 @@ public:
     double getForceX() { return Force[0]; }
     double getForceY() { return Force[1]; }
 
-    // do liczenia przemieszczen robotow
-    int getMoveCount(); 
-    void increaseMoveCount(); 
-    //
+    int getMoveCount();
+    void increaseMoveCount();
+    void setMoveCount(int value);
 
 private:
     double computeForceComponent(int dist);

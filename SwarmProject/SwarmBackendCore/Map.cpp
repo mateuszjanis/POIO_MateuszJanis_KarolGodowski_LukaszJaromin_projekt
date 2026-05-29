@@ -1,65 +1,58 @@
 #include "pch.h"
 #include "Map.h"
 #include <vector>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
 Map::Map()
 {
-	int init_x = 20;
-	int init_y = 20;
-	
-	this->resize(init_x, init_y);
+    int init_x = 20;
+    int init_y = 20;
+    this->resize(init_x, init_y);
 }
 
 Map::Map(int x_len, int y_len)
 {
-	this -> resize(x_len, y_len);
+    this->resize(x_len, y_len);
 }
 
 void Map::resize(int x_len, int y_len) {
 
-	size_x = x_len;
-	size_y = y_len;
-	obj_map.resize(x_len);
-	for (int i = 0; i < x_len; i++) {
+    size_x = x_len;
+    size_y = y_len;
+    robot_list.clear();
 
-		obj_map[i].resize(y_len);
+    obj_map.assign(x_len, vector<int>(y_len, 0));
 
-	}
-
-	for (int i = 0; i < x_len; i++) {
-		for (int j = 0; j < x_len; j++) {
-			if (i == 0 || i == x_len - 1 || j == 0 || j == y_len - 1)
-			{
-				obj_map[i][j] = 1; // przeszkoda
-			}
-			else
-			{
-				obj_map[i][j] = 0; // puste pole
-			}
-		}
-	}
+    for (int i = 0; i < x_len; i++) {
+        for (int j = 0; j < y_len; j++) {
+            if (i == 0 || i == x_len - 1 || j == 0 || j == y_len - 1)
+            {
+                obj_map[i][j] = 1;
+            }
+            else
+            {
+                obj_map[i][j] = 0;
+            }
+        }
+    }
 }
 
 int Map::get_size_x() {
-	
-	return size_x;
-
+    return size_x;
 }
 
 int Map::get_size_y() {
-
-	return size_y;
-
+    return size_y;
 }
 
 int Map::get_robot_num()
 {
-	return robot_list.size();
+    return robot_list.size();
 }
 
-// do liczenia ruchow robota
 int Map::get_robot_move_count(int id)
 {
 	return robot_list[id]->getMoveCount();
@@ -71,7 +64,7 @@ vector<int> Map::get_robot_pos(int id)
 	position[0] = robot_list[id]->getPosX();
 	position[1] = robot_list[id]->getPosY();
 
-	return position;
+    return position;
 }
 
 std::vector<double> Map::get_robot_Force(int id)
@@ -84,9 +77,7 @@ std::vector<double> Map::get_robot_Force(int id)
 }
 
 vector<vector<int>> Map::get_map() {
-
-	return obj_map;
-
+    return obj_map;
 }
 
 int Map::placeRobot(int x, int y)
@@ -129,38 +120,38 @@ int Map::placeRobot(int x, int y)
 
 int Map::placeObstacle(int x, int y)
 {
-	int com;
+    int com;
 
-	if (x > 0 && y > 0) {
-		if (x < size_x) {
-			if (y < size_y) {
-				switch (obj_map[x][y])
-				{
-				case 0:
-					obj_map[x][y] = 1;
-					com = 0; // jest ok
-					break;
-				case 1:
-					com = -1; // przeszkoda
-					break;
-				case 2:
-					com = -2; // robot
-					break;
-				}
-			}
-			else {
-				com = 1; // y poza granicą
-			}
-		}
-		else {
-			com = 2; // x poza granicą
-		}
-	}
-	else {
-		com = 3; // współrzędne ujemne
-	}
+    if (x > 0 && y > 0) {
+        if (x < size_x) {
+            if (y < size_y) {
+                switch (obj_map[x][y])
+                {
+                case 0:
+                    obj_map[x][y] = 1;
+                    com = 0;
+                    break;
+                case 1:
+                    com = -1;
+                    break;
+                case 2:
+                    com = -2;
+                    break;
+                }
+            }
+            else {
+                com = 1;
+            }
+        }
+        else {
+            com = 2;
+        }
+    }
+    else {
+        com = 3;
+    }
 
-	return com;
+    return com;
 }
 
 void Map::clearRobot(int id)
@@ -239,17 +230,134 @@ void Map::update()
 
 int Map::get_obstacle_num()
 {
-	int count = 0;
+    int count = 0;
 
-	for (int x = 0; x < size_x; x++)
-	{
-		for (int y = 0; y < size_y; y++)
-		{
-			if (obj_map[x][y] == 1)
-				count++;
-		}
-	}
+    for (int x = 0; x < size_x; x++)
+    {
+        for (int y = 0; y < size_y; y++)
+        {
+            if (obj_map[x][y] == 1)
+                count++;
+        }
+    }
 
-	return count - 76;
+    return count;
 }
 
+bool Map::saveToFile(const string& fileName)
+{
+    ofstream file(fileName);
+
+    if (!file.is_open())
+    {
+        return false;
+    }
+
+    file << "SWARM_SAVE_V1" << endl;
+    file << size_x << " " << size_y << endl;
+
+    int obstacleCount = 0;
+    for (int x = 0; x < size_x; x++)
+    {
+        for (int y = 0; y < size_y; y++)
+        {
+            if (obj_map[x][y] == 1 && !(x == 0 || x == size_x - 1 || y == 0 || y == size_y - 1))
+            {
+                obstacleCount++;
+            }
+        }
+    }
+
+    file << "OBSTACLES " << obstacleCount << endl;
+    for (int x = 0; x < size_x; x++)
+    {
+        for (int y = 0; y < size_y; y++)
+        {
+            if (obj_map[x][y] == 1 && !(x == 0 || x == size_x - 1 || y == 0 || y == size_y - 1))
+            {
+                file << x << " " << y << endl;
+            }
+        }
+    }
+
+    file << "ROBOTS " << robot_list.size() << endl;
+    for (int i = 0; i < robot_list.size(); i++)
+    {
+        file << robot_list[i].getPosX() << " "
+            << robot_list[i].getPosY() << " "
+            << robot_list[i].getMoveCount() << endl;
+    }
+
+    return true;
+}
+
+bool Map::loadFromFile(const string& fileName)
+{
+    ifstream file(fileName);
+
+    if (!file.is_open())
+    {
+        return false;
+    }
+
+    string header;
+    file >> header;
+
+    if (header != "SWARM_SAVE_V1")
+    {
+        return false;
+    }
+
+    int loadedSizeX, loadedSizeY;
+    file >> loadedSizeX >> loadedSizeY;
+
+    if (loadedSizeX < 3 || loadedSizeY < 3)
+    {
+        return false;
+    }
+
+    resize(loadedSizeX, loadedSizeY);
+
+    string sectionName;
+    int obstacleCount;
+    file >> sectionName >> obstacleCount;
+
+    if (sectionName != "OBSTACLES")
+    {
+        return false;
+    }
+
+    for (int i = 0; i < obstacleCount; i++)
+    {
+        int x, y;
+        file >> x >> y;
+
+        if (x > 0 && x < size_x - 1 && y > 0 && y < size_y - 1 && obj_map[x][y] == 0)
+        {
+            obj_map[x][y] = 1;
+        }
+    }
+
+    int robotCount;
+    file >> sectionName >> robotCount;
+
+    if (sectionName != "ROBOTS")
+    {
+        return false;
+    }
+
+    for (int i = 0; i < robotCount; i++)
+    {
+        int x, y, moveCount;
+        file >> x >> y >> moveCount;
+
+        if (x > 0 && x < size_x - 1 && y > 0 && y < size_y - 1 && obj_map[x][y] == 0)
+        {
+            Robot robot(x, y, moveCount);
+            robot_list.push_back(robot);
+            obj_map[x][y] = 2;
+        }
+    }
+
+    return true;
+}
