@@ -10,7 +10,7 @@ Robot::Robot(int x, int y, std::vector<std::vector<int>> obj_map)
     computeForce(obj_map);
 }
 
-Robot::Robot(int x, int y, std::vector<std::vector<int>> obj_map, , int moveCount) : Robot(x, y, obj_map)
+Robot::Robot(int x, int y, std::vector<std::vector<int>> obj_map, int moveCount) : Robot(x, y, obj_map)
 {
     this->moveCount = moveCount;
 }

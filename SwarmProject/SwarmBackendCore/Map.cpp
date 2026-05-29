@@ -283,9 +283,9 @@ bool Map::saveToFile(const string& fileName)
     file << "ROBOTS " << robot_list.size() << endl;
     for (int i = 0; i < robot_list.size(); i++)
     {
-        file << robot_list[i].getPosX() << " "
-            << robot_list[i].getPosY() << " "
-            << robot_list[i].getMoveCount() << endl;
+        file << robot_list[i]->getPosX() << " "
+            << robot_list[i]->getPosY() << " "
+            << robot_list[i]->getMoveCount() << endl;
     }
 
     return true;
@@ -353,8 +353,7 @@ bool Map::loadFromFile(const string& fileName)
 
         if (x > 0 && x < size_x - 1 && y > 0 && y < size_y - 1 && obj_map[x][y] == 0)
         {
-            Robot robot(x, y, moveCount);
-            robot_list.push_back(robot);
+            robot_list.push_back(new Robot(x, y, obj_map, moveCount));
             obj_map[x][y] = 2;
         }
     }
