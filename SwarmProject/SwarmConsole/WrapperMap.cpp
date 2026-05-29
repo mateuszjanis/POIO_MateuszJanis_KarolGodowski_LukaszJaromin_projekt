@@ -18,23 +18,23 @@ void WrapperMap::show()
 {
     vector<vector<int>> obj_map = mapa->get_map();
 
-    for (int i = 0; i < mapa->get_size_x(); i++) {
-        for (int j = 0; j < mapa->get_size_y(); j++) {
-            switch (obj_map[i][j])
-            {
-            case 0:
-                cout << "  ";
-                break;
-            case 1:
-                cout << "x ";
-                break;
-            case 2:
-                cout << "R ";
-                break;
-            }
-        }
-        cout << endl;
-    }
+	for (int i = 0; i < mapa->get_size_y(); i++) {
+		for (int j = 0; j < mapa->get_size_x(); j++) {
+			switch (obj_map[j][i])
+			{
+			case 0:
+				cout << "  ";
+				break;
+			case 1:
+				cout << "x ";
+				break;
+			case 2:
+				cout << "R ";
+				break;
+			}
+		}
+		cout << endl;
+	}
 };
 
 int WrapperMap::placeRobot(int x, int y)
@@ -108,24 +108,20 @@ void WrapperMap::update()
 
 void WrapperMap::showRobotPos()
 {
-    int count = mapa->get_robot_num();
-    vector<int> tempRobotPos(2);
+	int count = mapa->get_robot_num();
+	vector<int> tempRobotPos(2);
+	vector<double> tempRobotForce(2);
 
-    for (int i = 0; i < count; i++)
-    {
-        tempRobotPos = mapa->get_robot_pos(i);
-        cout << "Robot " << i << " x: " << tempRobotPos[0]
-            << " y: " << tempRobotPos[1]
-            << " ruchy: " << mapa->get_robot_move_count(i) << endl;
-    }
-}
-
-bool WrapperMap::saveToFile(const string& fileName)
-{
-    return mapa->saveToFile(fileName);
-}
-
-bool WrapperMap::loadFromFile(const string& fileName)
-{
-    return mapa->loadFromFile(fileName);
+	for (int i = 0; i < count; i++)
+	{
+		tempRobotPos = mapa->get_robot_pos(i);
+		tempRobotForce = mapa->get_robot_Force(i);
+		cout << "Robot " << i << " x: " << tempRobotPos[0]
+			<< " y: " << tempRobotPos[1]
+      << " ruchy: " << mapa->get_robot_move_count(i)
+			<< " FX: " << tempRobotForce[0]
+			<< " FY: " << tempRobotForce[1]
+			<< " F: " << sqrt(pow(tempRobotForce[0], 2) + pow(tempRobotForce[0], 2))
+			<< endl;
+	}
 }
