@@ -40,14 +40,24 @@ int main() {
 		}
 	}
 	
+	bool click = 1;
+	string command = "";
+
 	for (int i = 0; i < 100; i++)
 	{
 		system("CLS");
-		cout << "=============" << " SYMULACJA " << "==============\n";
+		cout << "==============" << " SYMULACJA " << "==============\n";
 		mapa.show();
 		mapa.showRobotPos();
 		mapa.update();
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+		//std::this_thread::sleep_for(std::chrono::seconds(1));
+		while (click)
+		{
+			cin >> command;
+			if (command != "") { click = 0; }
+		}
+		command = "";
+		click = 1;
 		
 	}
 

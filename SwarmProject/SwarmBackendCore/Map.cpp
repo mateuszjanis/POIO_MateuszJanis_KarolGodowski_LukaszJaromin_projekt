@@ -62,16 +62,25 @@ int Map::get_robot_num()
 // do liczenia ruchow robota
 int Map::get_robot_move_count(int id)
 {
-	return robot_list[id].getMoveCount();
+	return robot_list[id]->getMoveCount();
 }
 
 vector<int> Map::get_robot_pos(int id)
 {
 	vector<int> position(2);
-	position[0] = robot_list[id].getPosX();
-	position[1] = robot_list[id].getPosY();
+	position[0] = robot_list[id]->getPosX();
+	position[1] = robot_list[id]->getPosY();
 
 	return position;
+}
+
+std::vector<double> Map::get_robot_Force(int id)
+{
+	vector<double> force(2);
+	force[0] = robot_list[id]->getForceX();
+	force[1] = robot_list[id]->getForceY();
+
+	return force;
 }
 
 vector<vector<int>> Map::get_map() {
@@ -83,7 +92,6 @@ vector<vector<int>> Map::get_map() {
 int Map::placeRobot(int x, int y)
 {
 	int com;
-	Robot new_robot(x, y);
 
 	if (x > 0 && y > 0) {
 		if (x < size_x) {
@@ -94,7 +102,7 @@ int Map::placeRobot(int x, int y)
 					obj_map[x][y] = 2;
 					com = 0; // jest ok
 
-					robot_list.push_back(new_robot);
+					robot_list.push_back(new Robot(x, y, obj_map));
 					break;
 				case 1:
 					com = -1; // przeszkoda
@@ -157,34 +165,15 @@ int Map::placeObstacle(int x, int y)
 
 void Map::clearRobot(int id)
 {
-	int x = robot_list[id].getPosX();
-	int y = robot_list[id].getPosY();
+	int x = robot_list[id]->getPosX();
+	int y = robot_list[id]->getPosY();
 	obj_map[x][y] = 0;
 }
 
 void Map::moveRobot(int id, vector<int> move)
 {
-	int xtemp = robot_list[id].getPosX() + move[0];
-	int ytemp = robot_list[id].getPosY() + move[1];
-
-	// Dojechanie do granic
-	if (xtemp <= 0)
-	{
-		xtemp = 0;
-	}
-	else if (xtemp >= size_x - 1)
-	{
-		xtemp = size_x - 1;
-	}
-
-	if (ytemp <= 0)
-	{
-		ytemp = 0;
-	}
-	else if (ytemp >= size_y - 1)
-	{
-		ytemp = size_y - 1;
-	}
+	int xtemp = robot_list[id]->getPosX() + move[0];
+	int ytemp = robot_list[id]->getPosY() + move[1];
 
 	// Natrafienie na obiekt
 	bool checkObstacle = 1;
@@ -222,13 +211,13 @@ void Map::moveRobot(int id, vector<int> move)
 		}
 	}
 
-	if (robot_list[id].getPosX() != xtemp ||
-		robot_list[id].getPosY() != ytemp)
+	if (robot_list[id]->getPosX() != xtemp ||
+		robot_list[id]->getPosY() != ytemp)
 	{
-		robot_list[id].increaseMoveCount();
+		robot_list[id]->increaseMoveCount();
 	}
 
-	robot_list[id].setPosition(xtemp, ytemp); // czy działam na kopii czy na obiekcie ?????
+	robot_list[id]->setPosition(xtemp, ytemp, obj_map); // czy działam na kopii czy na obiekcie ?????
 	obj_map[xtemp][ytemp] = 2;
 
 }
@@ -239,7 +228,7 @@ void Map::update()
 
 	for (auto& robot : robot_list)
 	{
-		vector<int> move = robot.computeMove(obj_map);
+		vector<int> move = robot->computeMove();
 	
 		this->clearRobot(id);	
 		this->moveRobot(id, move);
