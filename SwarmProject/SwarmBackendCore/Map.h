@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include <vector>
+#include <string>
 #include "Robot.h"
 
 class Map
@@ -33,7 +34,6 @@ public:
 	// do liczenia ruchow roobta
 	int get_robot_move_count(int id);
 
-private:
-
+    bool saveToFile(const std::string& fileName);
+    bool loadFromFile(const std::string& fileName);
 };
-

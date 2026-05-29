@@ -10,10 +10,16 @@ Robot::Robot(int x, int y, std::vector<std::vector<int>> obj_map)
     computeForce(obj_map);
 }
 
+Robot::Robot(int x, int y, std::vector<std::vector<int>> obj_map, , int moveCount) : Robot(x, y, obj_map)
+{
+    this->moveCount = moveCount;
+}
+
 void Robot::setPosition(int newX, int newY, std::vector<std::vector<int>> obj_map)
 {
     x_pos = newX;
     y_pos = newY;
+    
     computeForce(obj_map);
 }
 
@@ -32,7 +38,6 @@ double Robot::getRadius()
     return radius;
 }
 
-// do liczenia przemieszczen robotow
 int Robot::getMoveCount()
 {
     return moveCount;
@@ -41,6 +46,11 @@ int Robot::getMoveCount()
 void Robot::increaseMoveCount()
 {
     moveCount++;
+}
+
+void Robot::setMoveCount(int value)
+{
+    moveCount = value;
 }
 
 double Robot::computeForceComponent(int dist)
@@ -151,6 +161,4 @@ vector<int> Robot::computeMove()
     }
 
     return move;
-
 };
-

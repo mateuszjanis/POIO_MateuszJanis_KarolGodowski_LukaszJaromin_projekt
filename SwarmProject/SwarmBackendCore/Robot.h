@@ -15,6 +15,7 @@ private:
 
 public:
     Robot(int x, int y, std::vector<std::vector<int>> obj_map);
+    Robot(int x, int y, std::vector<std::vector<int>> obj_map, int moveCount);
 
     void setPosition(int x, int y, std::vector<std::vector<int>> obj_map);
     int getPosX();
@@ -24,10 +25,9 @@ public:
     double getForceX() { return Force[0]; }
     double getForceY() { return Force[1]; }
 
-    // do liczenia przemieszczen robotow
-    int getMoveCount(); 
-    void increaseMoveCount(); 
-    //
+    int getMoveCount();
+    void increaseMoveCount();
+    void setMoveCount(int value);
 
 private:
     double computeForceComponent(int dist);
