@@ -10,8 +10,7 @@ private:
     double dt = 1;
     int radius = 10;
     int x_pos, y_pos;
-
-    int moveCount = 0; //
+    int moveCount = 0;
 
 public:
     Robot(int x, int y);
@@ -28,6 +27,6 @@ public:
     //
 
 private:
-    double ForceX_component(int dx, int dy, int currObj);
-    double ForceY_component(int dx, int dy, int currObj);
+    double computeForceComponent(int dist);
+
 };

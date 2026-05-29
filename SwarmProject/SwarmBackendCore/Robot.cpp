@@ -40,49 +40,21 @@ void Robot::increaseMoveCount()
 {
     moveCount++;
 }
-//
 
-
-double Robot::ForceX_component(int dx, int dy, int currObj)
+double Robot::computeForceComponent(int dist)
 {
     double ForceComponent = 0;
 
-    if (dx == 0 || currObj == 0 || dx * dx + dy * dy > radius * radius)
+    if (dist > 0)
     {
-        ForceComponent = 0;
-    }
-    else if (dx > 0)
-    {
-        ForceComponent = - k * 1 / pow(dx, 2);
+        ForceComponent = -k * 1 / pow(dist, 2);
     }
     else
     {
-        ForceComponent = k * 1 / pow(dx, 2);
+        ForceComponent = k * 1 / pow(dist, 2);
     }
 
     return ForceComponent;
-
-}
-
-double Robot::ForceY_component(int dx, int dy, int currObj)
-{
-    double ForceComponent = 0;
-
-    if (dy == 0 || currObj == 0 || dx * dx + dy * dy > radius * radius)
-    {
-        ForceComponent = 0;
-    }
-    else if (dy > 0)
-    {
-        ForceComponent = - k * 1 / pow(dy, 2);
-    }
-    else
-    {
-        ForceComponent = k * 1 / pow(dy, 2);
-    }
-
-    return ForceComponent;
-
 }
 
 vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
@@ -94,24 +66,70 @@ vector<int> Robot::computeMove(std::vector<std::vector<int>> obj_map)
     int cols = obj_map.size();
     int rows = obj_map[0].size();
 
-    int x_min = max(0, x_pos - radius);
-    int x_max = min(cols - 1, x_pos + radius);
-    int y_min = max(0, y_pos - radius);
-    int y_max = min(rows - 1, y_pos + radius);
+    //int x_min = max(0, x_pos - radius);
+    //int x_max = min(cols - 1, x_pos + radius);
+    //int y_min = max(0, y_pos - radius);
+    //int y_max = min(rows - 1, y_pos + radius);
 
-    for (int i = x_min; i <= x_max; i++) {
-        for (int j = y_min; j <= y_max; j++) {
+    vector<pair<int, int>> directions = {
+        {0, -1},  // w górę
+        {0, 1},   // w dół
+        {-1, 0},  // w lewo
+        {1, 0},   // w prawo
+        {-1, -1}, // lewy górny skos
+        {1, -1},  // prawy górny skos
+        {-1, 1},  // lewy dolny skos
+        {1, 1}    // prawy dolny skos
+    };
 
-            int dx = i - x_pos;
-            int dy = j - y_pos;
+    for (auto dir : directions) {
 
-            ForceX += ForceX_component(dx, dy, obj_map[i][j]);
-            ForceY += ForceY_component(dx, dy, obj_map[i][j]);
+        for (int step = 1; step <= radius; ++step) {
+            
+            int dx = dir.first * step;
+            int dy = dir.second * step;
+            int current_x = x_pos + dx;
+            int current_y = y_pos + dy;
+
+            if (current_x < 0 || current_x >= cols  || current_y < 0 || current_y >= rows) {
+                break; // poza mapą
+            }
+
+            int cell_value = obj_map[current_x][current_y];
+
+            if (cell_value == 1 || cell_value == 2) {
+                ForceX += computeForceComponent(dx);
+                ForceY += computeForceComponent(dy);
+                break;
+            }
         }
     }
 
-    move[0] = round(ForceX * dt * dt);
-    move[1] = round(ForceY * dt * dt); // policzenie przemieszczenia
+    double tangens = ForceY / ForceX;
+    int my, mx;
+
+    if (ForceY >= 0) { my = 1; }
+    else { my = -1; }
+
+    if (ForceX >= 0) { mx = 1; }
+    else { mx = -1; }
+
+    if (abs(tangens) < sqrt(3)/3) // tan(30st)
+    {
+        move[0] = mx;
+        move[1] = 0;
+    }
+    else if (abs(tangens) < sqrt(3)) // tan(60)
+    {
+        move[0] = mx;
+        move[1] = my;
+    }
+    else
+    {
+        move[0] = 0;
+        move[1] = my;
+    }
+
 
     return move;
 
