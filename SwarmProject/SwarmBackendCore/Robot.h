@@ -7,33 +7,37 @@ class Robot
 {
 private:
     double k = 1;
-    double dt = 1;
-    int radius = 10;
+    int radius = 5;
     int x_pos, y_pos;
-
-    int moveCount = 0; //
-    
     int lastMoveX = 0;
     int lastMoveY = 0;
+    int moveCount = 0;
+    double ForceTreshold = .3;
+    double Force[2] = {0.0, 0.0};
 
 public:
-    Robot(int x, int y);
+    Robot(int x, int y, std::vector<std::vector<int>> obj_map);
+    Robot(int x, int y, std::vector<std::vector<int>> obj_map, int moveCount);
 
-    void setPosition(int x, int y);
+    void setPosition(int x, int y, std::vector<std::vector<int>> obj_map);
     int getPosX();
     int getPosY();
     double getRadius();
-    std::vector<int> computeMove(std::vector<std::vector<int>> obj_map);
+    std::vector<int> computeMove();
+    double getForceX() { return Force[0]; }
+    double getForceY() { return Force[1]; }
 
-    // do liczenia przemieszczen robotow
-    int getMoveCount(); 
-    void increaseMoveCount(); 
-    //
+    int getMoveCount();
+    void increaseMoveCount();
+    void setMoveCount(int value);
 
     int getLastMoveX();
     int getLastMoveY();
 
 private:
-    double ForceX_component(int dx, int dy, int currObj);
-    double ForceY_component(int dx, int dy, int currObj);
+    double computeForceComponent(int dist);
+    void computeForce(std::vector<std::vector<int>> obj_map);
+    // wykonywana jest podczas tworzenia obiektu robota
+    // oraz po wykonaniu każdego ruchu (computeMove)
+
 };
