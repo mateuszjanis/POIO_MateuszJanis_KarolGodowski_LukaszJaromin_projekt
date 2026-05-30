@@ -8,7 +8,6 @@ class WrapperMap
 public:
 	~WrapperMap();
 	WrapperMap(int x_len, int y_len);
-	void show();
 	int placeRobot(int x, int y);
 	int placeObstacle(int x, int y);
 	void update();

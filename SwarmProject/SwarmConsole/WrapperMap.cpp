@@ -125,3 +125,13 @@ void WrapperMap::showRobotPos()
 			<< endl;
 	}
 }
+
+bool WrapperMap::saveToFile(const std::string& fileName)
+{
+    return mapa->saveToFile(fileName);
+}
+
+bool WrapperMap::loadFromFile(const std::string& fileName)
+{
+    return mapa->loadFromFile(fileName);
+}

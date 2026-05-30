@@ -37,8 +37,8 @@ public:
 	int get_robot_last_move_x(int id);
 	int get_robot_last_move_y(int id);
 
-private:
+	bool saveToFile(const std::string& fileName);
+	bool loadFromFile(const std::string& fileName);
 
-    // bool saveToFile(const std::string& fileName);
-    // bool loadFromFile(const std::string& fileName);
+private:
 };
