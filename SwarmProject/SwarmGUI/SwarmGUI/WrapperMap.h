@@ -25,6 +25,12 @@ public:
 
 	std::vector<int> getRobotPos(int id);
 
+	void setInitialForces(); // Wyliczenie sił - powinno być użyte po postawieniu
+	// wszystkich przeszkód i robotów
+	// jeśli dodajemy roboty podczas symulacji - też wywołać
+	// siły są liczone dla kolejnego ruchu wykonanego
+
+
 	int getRobotLastMoveX(int id);
 	int getRobotLastMoveY(int id);
 

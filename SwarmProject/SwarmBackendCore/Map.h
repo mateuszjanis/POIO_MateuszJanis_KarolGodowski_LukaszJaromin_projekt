@@ -28,6 +28,10 @@ public:
 	int placeObstacle(int x, int y);
 	void moveRobot(int id, std::vector<int> move);
 	void clearRobot(int id);
+	void setInitialForces(); // Wyliczenie sił - powinno być użyte po postawieniu
+							 // wszystkich przeszkód i robotów
+							 // jeśli dodajemy roboty podczas symulacji - też wywołać
+							 // siły są liczone dla kolejnego ruchu wykonanego
 
 	int get_obstacle_num();
 

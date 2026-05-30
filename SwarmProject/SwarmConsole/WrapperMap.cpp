@@ -108,23 +108,34 @@ void WrapperMap::update()
 
 void WrapperMap::showRobotPos()
 {
-	int count = mapa->get_robot_num();
-	vector<int> tempRobotPos(2);
-	vector<double> tempRobotForce(2);
+    int count = mapa->get_robot_num();
+    vector<int> tempRobotPos(2);
+    vector<double> tempRobotForce(2);
 
-	for (int i = 0; i < count; i++)
-	{
-		tempRobotPos = mapa->get_robot_pos(i);
-		tempRobotForce = mapa->get_robot_Force(i);
-		cout << "Robot " << i << " x: " << tempRobotPos[0]
-			<< " y: " << tempRobotPos[1]
-      << " ruchy: " << mapa->get_robot_move_count(i)
-			<< " FX: " << tempRobotForce[0]
-			<< " FY: " << tempRobotForce[1]
-			<< " F: " << sqrt(pow(tempRobotForce[0], 2) + pow(tempRobotForce[0], 2))
-			<< endl;
-	}
+    for (int i = 0; i < count; i++)
+    {
+        tempRobotPos = mapa->get_robot_pos(i);
+        tempRobotForce = mapa->get_robot_Force(i);
+        cout << "Robot " << i << " x: " << tempRobotPos[0]
+            << " y: " << tempRobotPos[1]
+            << " ruchy: " << mapa->get_robot_move_count(i)
+            << " FX: " << tempRobotForce[0]
+            << " FY: " << tempRobotForce[1]
+            << " F: " << sqrt(pow(tempRobotForce[0], 2) + pow(tempRobotForce[0], 2))
+            << endl;
+    }
 }
+
+void WrapperMap::setInitialForces()
+{
+    mapa->setInitialForces();
+}
+
+
+//void WrapperMap::setInitialForces()
+//{
+//    mapa->setInitialForces();
+//}
 
 bool WrapperMap::saveToFile(const std::string& fileName)
 {

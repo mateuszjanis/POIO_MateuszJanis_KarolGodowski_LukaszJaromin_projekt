@@ -77,24 +77,26 @@ int main() {
  		}
  	}
 
- 	bool click = 1;
- 	string command = "";
+ 	//bool click = 1;
+ 	//string command = "";
 
  	for (int i = 0; i < 100; i++)
  	{
  		system("CLS");
  		cout << "==============" << " SYMULACJA " << "==============\n";
  		mapa.show();
+        mapa.setInitialForces();
  		mapa.showRobotPos();
  		mapa.update();
- 		//std::this_thread::sleep_for(std::chrono::seconds(1));
- 		while (click)
- 		{
- 			cin >> command;
- 			if (command != "") { click = 0; }
- 		}
- 		command = "";
- 		click = 1;
+        cout << "Krok: " << i;
+ 		std::this_thread::sleep_for(std::chrono::seconds(3));
+ 		//while (click)
+ 		//{
+ 		//	cin >> command;
+ 		//	if (command != "") { click = 0; }
+ 		//}
+ 		//command = "";
+ 		//click = 1;
 
  	}
 

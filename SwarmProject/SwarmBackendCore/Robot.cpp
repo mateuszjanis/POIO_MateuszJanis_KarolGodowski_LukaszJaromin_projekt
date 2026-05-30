@@ -3,14 +3,13 @@
 
 using namespace std;
 
-Robot::Robot(int x, int y, std::vector<std::vector<int>> obj_map)
+Robot::Robot(int x, int y)
 {
     x_pos = x;
     y_pos = y;
-    computeForce(obj_map);
 }
 
-Robot::Robot(int x, int y, std::vector<std::vector<int>> obj_map, int moveCount) : Robot(x, y, obj_map)
+Robot::Robot(int x, int y, int moveCount) : Robot(x, y)
 {
     this->moveCount = moveCount;
 }
@@ -141,7 +140,7 @@ vector<int> Robot::computeMove()
     int my, mx;
 
     // treshold dla zbyt małych sił
-    if (abs(ForceX) < ForceTreshold && abs(ForceY) < ForceTreshold)
+    if (sqrt(ForceX * ForceX + ForceY * ForceY) < ForceTreshold)
     {
         move[0] = 0;
         move[1] = 0;
