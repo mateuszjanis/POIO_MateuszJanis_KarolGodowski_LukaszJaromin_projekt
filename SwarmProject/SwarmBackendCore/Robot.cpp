@@ -58,27 +58,14 @@ int Robot::getLastMoveY()
     return lastMoveY;
 }
 
-// void Robot::setMoveCount(int value)
-// {
-//     moveCount = value;
-// }
+void Robot::setMoveCount(int value)
+{
+    moveCount = value;
+}
 
 double Robot::computeForceComponent(int dist)
 {
-    double ForceComponent = 0;
-
-    if (dist > 0)
-    {
-        ForceComponent = - k * 1 / pow(dist, 2);
-    }
-    else if (dist < 0)
-    {
-        ForceComponent = k * 1 / pow(dist, 2);
-    }
-    else
-    {
-        ForceComponent = 0;
-    }
+    double ForceComponent = - k * 1 / (dist * dist);
 
     return ForceComponent;
 }
@@ -102,9 +89,20 @@ void Robot::computeForce(std::vector<std::vector<int>> obj_map)
         {1, 1}    // prawy dolny skos
     };
 
+    int component = 1;
+
     for (auto dir : directions) {
 
-        for (int step = 1; step <= radius; step++) {
+        if (abs(dir.first) == 1 && abs(dir.second) == 1) //po skosie należy "zmniejszyć" badaną odległość
+        {
+            component = 1 / sqrt(2);
+        }
+        else
+        {
+            component = 1;
+        }
+
+        for (int step = 1; step * component <= radius; step++) {
 
             int dx = dir.first * step;
             int dy = dir.second * step;
@@ -117,9 +115,12 @@ void Robot::computeForce(std::vector<std::vector<int>> obj_map)
 
             int cell_value = obj_map[current_x][current_y];
 
+            double dist = sqrt(dx * dx + dy * dy);
+            double Force = computeForceComponent(dist); // całkowita siła 
+
             if (cell_value != 0) {
-                ForceX += computeForceComponent(dx);
-                ForceY += computeForceComponent(dy);
+                ForceX += Force * dx / dist; // rzutowanie 
+                ForceY += Force * dy / dist; // na osie
                 break;
             }
         }
