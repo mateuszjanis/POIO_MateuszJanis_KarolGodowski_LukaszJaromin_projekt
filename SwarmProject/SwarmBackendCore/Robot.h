@@ -12,12 +12,12 @@ private:
     int lastMoveX = 0;
     int lastMoveY = 0;
     int moveCount = 0;
-    double ForceTreshold = .3;
+    double ForceTreshold = .1;
     double Force[2] = {0.0, 0.0};
 
 public:
-    Robot(int x, int y, std::vector<std::vector<int>> obj_map);
-    Robot(int x, int y, std::vector<std::vector<int>> obj_map, int moveCount);
+    Robot(int x, int y);
+    Robot(int x, int y, int moveCount);
 
     void setPosition(int x, int y, std::vector<std::vector<int>> obj_map);
     int getPosX();
@@ -33,11 +33,13 @@ public:
 
     int getLastMoveX();
     int getLastMoveY();
+    
+    void computeForce(std::vector<std::vector<int>> obj_map);
+    // wykonywana jest przy wywołaniu setInitialForces()
+    // oraz po wykonaniu każdego ruchu (computeMove())
 
 private:
     double computeForceComponent(int dist);
-    void computeForce(std::vector<std::vector<int>> obj_map);
-    // wykonywana jest podczas tworzenia obiektu robota
-    // oraz po wykonaniu każdego ruchu (computeMove)
+    
 
 };

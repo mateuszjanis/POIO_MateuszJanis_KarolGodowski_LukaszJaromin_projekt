@@ -3,14 +3,13 @@
 
 using namespace std;
 
-Robot::Robot(int x, int y, std::vector<std::vector<int>> obj_map)
+Robot::Robot(int x, int y)
 {
     x_pos = x;
     y_pos = y;
-    computeForce(obj_map);
 }
 
-Robot::Robot(int x, int y, std::vector<std::vector<int>> obj_map, int moveCount) : Robot(x, y, obj_map)
+Robot::Robot(int x, int y, int moveCount) : Robot(x, y)
 {
     this->moveCount = moveCount;
 }
@@ -58,27 +57,14 @@ int Robot::getLastMoveY()
     return lastMoveY;
 }
 
-// void Robot::setMoveCount(int value)
-// {
-//     moveCount = value;
-// }
+void Robot::setMoveCount(int value)
+{
+    moveCount = value;
+}
 
 double Robot::computeForceComponent(int dist)
 {
-    double ForceComponent = 0;
-
-    if (dist > 0)
-    {
-        ForceComponent = - k * 1 / pow(dist, 2);
-    }
-    else if (dist < 0)
-    {
-        ForceComponent = k * 1 / pow(dist, 2);
-    }
-    else
-    {
-        ForceComponent = 0;
-    }
+    double ForceComponent = - k * 1 / (dist * dist);
 
     return ForceComponent;
 }
@@ -102,9 +88,20 @@ void Robot::computeForce(std::vector<std::vector<int>> obj_map)
         {1, 1}    // prawy dolny skos
     };
 
+    int component = 1;
+
     for (auto dir : directions) {
 
-        for (int step = 1; step <= radius; step++) {
+        if (abs(dir.first) == 1 && abs(dir.second) == 1) //po skosie należy "zmniejszyć" badaną odległość
+        {
+            component = 1 / sqrt(2);
+        }
+        else
+        {
+            component = 1;
+        }
+
+        for (int step = 1; step * component <= radius; step++) {
 
             int dx = dir.first * step;
             int dy = dir.second * step;
@@ -117,9 +114,12 @@ void Robot::computeForce(std::vector<std::vector<int>> obj_map)
 
             int cell_value = obj_map[current_x][current_y];
 
+            double dist = sqrt(dx * dx + dy * dy);
+            double Force = computeForceComponent(dist); // całkowita siła 
+
             if (cell_value != 0) {
-                ForceX += computeForceComponent(dx);
-                ForceY += computeForceComponent(dy);
+                ForceX += Force * dx / dist; // rzutowanie 
+                ForceY += Force * dy / dist; // na osie
                 break;
             }
         }
@@ -140,7 +140,7 @@ vector<int> Robot::computeMove()
     int my, mx;
 
     // treshold dla zbyt małych sił
-    if (abs(ForceX) < ForceTreshold && abs(ForceY) < ForceTreshold)
+    if (sqrt(ForceX * ForceX + ForceY * ForceY) < ForceTreshold)
     {
         move[0] = 0;
         move[1] = 0;

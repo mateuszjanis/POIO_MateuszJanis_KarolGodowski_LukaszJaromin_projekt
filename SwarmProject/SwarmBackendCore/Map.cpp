@@ -93,7 +93,7 @@ int Map::placeRobot(int x, int y)
 					obj_map[x][y] = 2;
 					com = 0; // jest ok
 
-					robot_list.push_back(new Robot(x, y, obj_map));
+					robot_list.push_back(new Robot(x, y));
 					break;
 				case 1:
 					com = -1; // przeszkoda
@@ -216,16 +216,27 @@ void Map::moveRobot(int id, vector<int> move)
 void Map::update()
 {
 	int id = 0;
+	vector<int> curr_move = { 0,0 };
+	vector<vector<int>> move_list;
 
+	// obliczenie ruchów
 	for (auto& robot : robot_list)
 	{
-		vector<int> move = robot->computeMove();
-	
-		this->clearRobot(id);	
-		this->moveRobot(id, move);
+		curr_move = robot->computeMove();
+		move_list.push_back(curr_move);
 
+	}
+
+	curr_move = { 0,0 };
+	// właściwy ruch robotów
+	for (auto& robot : robot_list)
+	{
+		curr_move = move_list[id];
+		clearRobot(id);
+		moveRobot(id, curr_move);
 		id++;
 	}
+
 }
 
 int Map::get_obstacle_num()
@@ -252,6 +263,14 @@ int Map::get_robot_last_move_x(int id)
 int Map::get_robot_last_move_y(int id)
 {
 	return robot_list[id]->getLastMoveY();
+}
+
+void Map::setInitialForces()
+{
+	for (auto& robot : robot_list)
+	{
+		robot->computeForce(obj_map); // aktualna mapa
+	}
 }
 
  bool Map::saveToFile(const string& fileName)
@@ -303,7 +322,7 @@ int Map::get_robot_last_move_y(int id)
  
  bool Map::loadFromFile(const string& fileName)
  {
- //    ifstream file(fileName);
+	 //    ifstream file(fileName);
 
  //    if (!file.is_open())
  //    {
@@ -318,55 +337,56 @@ int Map::get_robot_last_move_y(int id)
  //        return false;
  //    }
 
-     int loadedSizeX, loadedSizeY;
- //    file >> loadedSizeX >> loadedSizeY;
+	 int loadedSizeX, loadedSizeY;
+	 //    file >> loadedSizeX >> loadedSizeY;
 
- //    if (loadedSizeX < 3 || loadedSizeY < 3)
- //    {
- //        return false;
- //    }
+	 //    if (loadedSizeX < 3 || loadedSizeY < 3)
+	 //    {
+	 //        return false;
+	 //    }
 
- //    resize(loadedSizeX, loadedSizeY);
+	 //    resize(loadedSizeX, loadedSizeY);
 
-     string sectionName;
-     int obstacleCount;
- //    file >> sectionName >> obstacleCount;
+	 string sectionName;
+	 int obstacleCount;
+	 //    file >> sectionName >> obstacleCount;
 
- //    if (sectionName != "OBSTACLES")
- //    {
- //        return false;
- //    }
+	 //    if (sectionName != "OBSTACLES")
+	 //    {
+	 //        return false;
+	 //    }
 
- //    for (int i = 0; i < obstacleCount; i++)
- //    {
- //        int x, y;
- //        file >> x >> y;
+	 //    for (int i = 0; i < obstacleCount; i++)
+	 //    {
+	 //        int x, y;
+	 //        file >> x >> y;
 
- //        if (x > 0 && x < size_x - 1 && y > 0 && y < size_y - 1 && obj_map[x][y] == 0)
- //        {
- //            obj_map[x][y] = 1;
- //        }
- //    }
+	 //        if (x > 0 && x < size_x - 1 && y > 0 && y < size_y - 1 && obj_map[x][y] == 0)
+	 //        {
+	 //            obj_map[x][y] = 1;
+	 //        }
+	 //    }
 
- //    int robotCount;
- //    file >> sectionName >> robotCount;
+	 //    int robotCount;
+	 //    file >> sectionName >> robotCount;
 
- //    if (sectionName != "ROBOTS")
- //    {
- //        return false;
- //    }
+	 //    if (sectionName != "ROBOTS")
+	 //    {
+	 //        return false;
+	 //    }
 
- //    for (int i = 0; i < robotCount; i++)
- //    {
- //        int x, y, moveCount;
- //        file >> x >> y >> moveCount;
+	 //    for (int i = 0; i < robotCount; i++)
+	 //    {
+	 //        int x, y, moveCount;
+	 //        file >> x >> y >> moveCount;
 
- //        if (x > 0 && x < size_x - 1 && y > 0 && y < size_y - 1 && obj_map[x][y] == 0)
- //        {
- //            robot_list.push_back(new Robot(x, y, obj_map, moveCount));
- //            obj_map[x][y] = 2;
- //        }
- //    }
+	 //        if (x > 0 && x < size_x - 1 && y > 0 && y < size_y - 1 && obj_map[x][y] == 0)
+	 //        {
+	 //            robot_list.push_back(new Robot(x, y, obj_map, moveCount));
+	 //            obj_map[x][y] = 2;
+	 //        }
+	 //    }
 
-     return true;
+	 return true;
  }
+ 

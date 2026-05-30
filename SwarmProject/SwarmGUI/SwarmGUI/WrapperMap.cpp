@@ -75,6 +75,11 @@ std::vector<int> WrapperMap::getRobotPos(int id)
 	return mapa->get_robot_pos(id);
 }
 
+void WrapperMap::setInitialForces()
+{
+	mapa->setInitialForces();
+}
+
 int WrapperMap::getRobotLastMoveX(int id)
 {
 	return mapa->get_robot_last_move_x(id);

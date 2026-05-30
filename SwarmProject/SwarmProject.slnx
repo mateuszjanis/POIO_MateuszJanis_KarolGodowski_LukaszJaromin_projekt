@@ -6,7 +6,6 @@
   <Project Path="SwarmBackendCore/SwarmBackendCore.vcxproj" Id="b62afe1a-aaed-471c-a8c5-6690e6bf9b0f" />
   <Project Path="SwarmConsole/SwarmConsole.vcxproj" Id="734cd606-e153-4165-ac43-9d8fe974e766">
     <BuildDependency Project="SwarmBackendCore/SwarmBackendCore.vcxproj" />
-    <BuildDependency Project="SwarmGUI/SwarmGUI/SwarmGUI.vcxproj" />
   </Project>
   <Project Path="SwarmGUI/SwarmGUI/SwarmGUI.vcxproj" Id="5cfc947d-34bf-e82c-3fc7-efda325f8500">
     <BuildDependency Project="SwarmBackendCore/SwarmBackendCore.vcxproj" />
