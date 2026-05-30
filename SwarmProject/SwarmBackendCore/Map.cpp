@@ -246,12 +246,14 @@ int Map::get_obstacle_num()
 
 int Map::get_robot_last_move_x(int id)
 {
-	return robot_list[id].getLastMoveX();
+	return robot_list[id]->getLastMoveX();
 }
 
 int Map::get_robot_last_move_y(int id)
 {
-	return robot_list[id].getLastMoveY();
+	return robot_list[id]->getLastMoveY();
+}
+
 // bool Map::saveToFile(const string& fileName)
 // {
 //     ofstream file(fileName);
@@ -368,4 +370,3 @@ int Map::get_robot_last_move_y(int id)
 //     }
 
 //     return true;
-}
