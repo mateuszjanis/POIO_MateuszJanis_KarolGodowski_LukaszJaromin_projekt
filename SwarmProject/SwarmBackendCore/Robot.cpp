@@ -48,10 +48,20 @@ void Robot::increaseMoveCount()
     moveCount++;
 }
 
-void Robot::setMoveCount(int value)
+int Robot::getLastMoveX()
 {
-    moveCount = value;
+    return lastMoveX;
 }
+
+int Robot::getLastMoveY()
+{
+    return lastMoveY;
+}
+
+// void Robot::setMoveCount(int value)
+// {
+//     moveCount = value;
+// }
 
 double Robot::computeForceComponent(int dist)
 {
@@ -159,6 +169,9 @@ vector<int> Robot::computeMove()
             move[1] = my;
         }
     }
+
+    lastMoveX = move[0];
+    lastMoveY = move[1];
 
     return move;
 };

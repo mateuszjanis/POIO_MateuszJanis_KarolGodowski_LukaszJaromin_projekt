@@ -20,6 +20,9 @@ namespace SwarmGUI {
 
 	private:
 		WrapperMap* mapa = new WrapperMap(20, 20);
+	private: System::Windows::Forms::Button^ buttonToggleVectors;
+
+		   bool showVectors = false;
 
 	public:
 		MainWin(void)
@@ -134,6 +137,7 @@ namespace SwarmGUI {
 			this->dataGridRobots = (gcnew System::Windows::Forms::DataGridView());
 			this->columnRobotID = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->columnMoveCount = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->buttonToggleVectors = (gcnew System::Windows::Forms::Button());
 			this->menuStrip1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBoxMap))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericX))->BeginInit();
@@ -163,7 +167,7 @@ namespace SwarmGUI {
 			// zamknijToolStripMenuItem
 			// 
 			this->zamknijToolStripMenuItem->Name = L"zamknijToolStripMenuItem";
-			this->zamknijToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->zamknijToolStripMenuItem->Size = System::Drawing::Size(117, 22);
 			this->zamknijToolStripMenuItem->Text = L"Zamknij";
 			this->zamknijToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::zamknijToolStripMenuItem_Click);
 			// 
@@ -394,11 +398,22 @@ namespace SwarmGUI {
 			this->columnMoveCount->Name = L"columnMoveCount";
 			this->columnMoveCount->ReadOnly = true;
 			// 
+			// buttonToggleVectors
+			// 
+			this->buttonToggleVectors->Location = System::Drawing::Point(568, 590);
+			this->buttonToggleVectors->Name = L"buttonToggleVectors";
+			this->buttonToggleVectors->Size = System::Drawing::Size(108, 23);
+			this->buttonToggleVectors->TabIndex = 16;
+			this->buttonToggleVectors->Text = L"Poka¿ wektory";
+			this->buttonToggleVectors->UseVisualStyleBackColor = true;
+			this->buttonToggleVectors->Click += gcnew System::EventHandler(this, &MainWin::buttonToggleVectors_Click);
+			// 
 			// MainWin
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(919, 706);
+			this->Controls->Add(this->buttonToggleVectors);
 			this->Controls->Add(this->dataGridRobots);
 			this->Controls->Add(this->labelObstaclesCount);
 			this->Controls->Add(this->labelRobotsCount);
@@ -561,6 +576,26 @@ private: System::Void pictureBoxMap_Paint(System::Object^ sender, System::Window
 			x * cellW + cellW / 4,
 			y * cellH + cellH / 4
 		);
+
+		if (showVectors)
+		{
+			int moveX = mapa->getRobotLastMoveX(i);
+			int moveY = mapa->getRobotLastMoveY(i);
+
+			int startX = x * cellW + cellW / 2;
+			int startY = y * cellH + cellH / 2;
+
+			int endX = startX + moveX * 15;
+			int endY = startY + moveY * 15;
+
+			g->DrawLine(
+				gcnew Pen(Color::Blue, 2),
+				startX,
+				startY,
+				endX,
+				endY
+			);
+		}
 	}
 }
 
@@ -633,5 +668,15 @@ private: System::Void krokToolStripMenuItem_Click(System::Object^ sender, System
 }
 
 
+private: System::Void buttonToggleVectors_Click(System::Object^ sender, System::EventArgs^ e) {
+	showVectors = !showVectors;
+
+	if (showVectors)
+		buttonToggleVectors->Text = L"Ukryj wektory";
+	else
+		buttonToggleVectors->Text = L"Poka¿ wektory";
+
+	pictureBoxMap->Refresh();
+}
 };
 }

@@ -1,0 +1,8 @@
+C:\Users\karol\OneDrive\Pulpit\Repozytorium projekt rój\SwarmProject\SwarmGUI\SwarmGUI\x64\Debug\SwarmGUI.vcxproj.AssemblyReference.cache
+C:\Users\karol\OneDrive\Pulpit\Repozytorium projekt rój\SwarmProject\SwarmGUI\SwarmGUI\x64\Debug\SwarmGUI.MainWin.resources
+C:\Users\karol\OneDrive\Pulpit\Repozytorium projekt rój\SwarmProject\SwarmGUI\SwarmGUI\x64\Debug\SwarmGUI.OAutorach.resources
+C:\Users\karol\OneDrive\Pulpit\Repozytorium projekt rój\SwarmProject\SwarmGUI\SwarmGUI\x64\Debug\SwarmGUI.vcxproj.GenerateResource.cache
+C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmGUI\SwarmGUI\x64\Debug\SwarmGUI.vcxproj.AssemblyReference.cache
+C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmGUI\SwarmGUI\x64\Debug\SwarmGUI.MainWin.resources
+C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmGUI\SwarmGUI\x64\Debug\SwarmGUI.OAutorach.resources
+C:\Users\matis\OneDrive\Dokumenty\WIMIR\SEMESTR_6\POIO\PROJEKTY\POIO_MateuszJanis_KarolGodowski_LukaszJaromin_projekt\SwarmProject\SwarmGUI\SwarmGUI\x64\Debug\SwarmGUI.vcxproj.GenerateResource.cache

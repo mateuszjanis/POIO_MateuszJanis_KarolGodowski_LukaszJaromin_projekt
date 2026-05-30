@@ -9,6 +9,8 @@ private:
     double k = 1;
     int radius = 5;
     int x_pos, y_pos;
+    int lastMoveX = 0;
+    int lastMoveY = 0;
     int moveCount = 0;
     double ForceTreshold = .3;
     double Force[2] = {0.0, 0.0};
@@ -28,6 +30,9 @@ public:
     int getMoveCount();
     void increaseMoveCount();
     void setMoveCount(int value);
+
+    int getLastMoveX();
+    int getLastMoveY();
 
 private:
     double computeForceComponent(int dist);

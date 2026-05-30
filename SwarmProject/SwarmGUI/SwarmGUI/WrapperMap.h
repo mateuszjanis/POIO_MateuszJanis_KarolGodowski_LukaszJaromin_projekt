@@ -1,10 +1,9 @@
 #pragma once
-#pragma once
 #include "Map.h"
 
 class WrapperMap
 {
-	Map* mapa = new Map(20, 20);
+	Map* mapa = new Map(20,20);
 
 public:
 	~WrapperMap();
@@ -12,6 +11,7 @@ public:
 	int placeRobot(int x, int y);
 	int placeObstacle(int x, int y);
 	void update();
+	void showRobotPos();
 
 	std::vector<std::vector<int>> getMap();
 	int getSizeX();
@@ -25,8 +25,9 @@ public:
 
 	std::vector<int> getRobotPos(int id);
 
+	int getRobotLastMoveX(int id);
+	int getRobotLastMoveY(int id);
+
 private:
 
 };
-
-

@@ -34,6 +34,11 @@ public:
 	// do liczenia ruchow roobta
 	int get_robot_move_count(int id);
 
-    bool saveToFile(const std::string& fileName);
-    bool loadFromFile(const std::string& fileName);
+	int get_robot_last_move_x(int id);
+	int get_robot_last_move_y(int id);
+
+	bool saveToFile(const std::string& fileName);
+	bool loadFromFile(const std::string& fileName);
+
+private:
 };
