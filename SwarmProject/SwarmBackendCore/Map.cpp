@@ -90,6 +90,7 @@ int Map::placeRobot(int x, int y)
 				switch (obj_map[x][y])
 				{
 				case 0:
+					saveState();
 					obj_map[x][y] = 2;
 					com = 0; // jest ok
 
@@ -128,6 +129,7 @@ int Map::placeObstacle(int x, int y)
                 switch (obj_map[x][y])
                 {
                 case 0:
+					saveState();
                     obj_map[x][y] = 1;
                     com = 0;
                     break;
@@ -215,6 +217,13 @@ void Map::moveRobot(int id, vector<int> move)
 
 void Map::update()
 {
+
+	if (robot_list.empty())
+		return;
+
+	saveState();
+
+
 	int id = 0;
 	vector<int> curr_move = { 0,0 };
 	vector<vector<int>> move_list;
@@ -239,13 +248,14 @@ void Map::update()
 
 }
 
+
 int Map::get_obstacle_num()
 {
     int count = 0;
 
-    for (int x = 0; x < size_x; x++)
+    for (int x = 1; x < size_x-1; x++)
     {
-        for (int y = 0; y < size_y; y++)
+        for (int y = 1; y < size_y-1; y++)
         {
             if (obj_map[x][y] == 1)
                 count++;
@@ -390,3 +400,83 @@ void Map::setInitialForces()
 	 return true;
  }
  
+ void Map::saveState()
+ {
+	 MapState state;
+
+	 state.size_x = size_x;
+	 state.size_y = size_y;
+	 //state.robot_list = robot_list;
+	 for (auto& robot : robot_list)
+	 {
+		 RobotState rs;
+
+		 rs.x = robot->getPosX();
+		 rs.y = robot->getPosY();
+		 rs.moveCount = robot->getMoveCount();
+		 rs.lastMoveX = robot->getLastMoveX();
+		 rs.lastMoveY = robot->getLastMoveY();
+
+		 state.robots.push_back(rs);
+	 }
+	 state.obj_map = obj_map;
+
+	 history.push_back(state);
+ }
+
+ bool Map::undoLastState()
+ {
+	 if (history.empty())
+		 return false;
+
+	 MapState previous = history.back();
+	 history.pop_back();
+
+	 
+	 int commonCount = std::min(
+		 (int)previous.robots.size(),
+		 (int)robot_list.size()
+	 );
+
+	 std::vector<int> reverseMoveX(commonCount, 0);
+	 std::vector<int> reverseMoveY(commonCount, 0);
+
+	 for (int i = 0; i < commonCount; i++)
+	 {
+		 reverseMoveX[i] = previous.robots[i].x - robot_list[i]->getPosX();
+		 reverseMoveY[i] = previous.robots[i].y - robot_list[i]->getPosY();
+	 }
+
+	 
+	 for (auto& robot : robot_list)
+	 {
+		 delete robot;
+	 }
+	 robot_list.clear();
+
+	 
+	 size_x = previous.size_x;
+	 size_y = previous.size_y;
+	 obj_map = previous.obj_map;
+
+	 
+	 for (int i = 0; i < previous.robots.size(); i++)
+	 {
+		 RobotState rs = previous.robots[i];
+
+		 Robot* robot = new Robot(rs.x, rs.y);
+		 
+		 robot->setMoveCount(rs.moveCount);
+		 robot->setLastMove(rs.lastMoveX, rs.lastMoveY);
+
+		 
+		 if (i < commonCount)
+		 {
+			 robot->setLastMove(reverseMoveX[i], reverseMoveY[i]);
+		 }
+
+		 robot_list.push_back(robot);
+	 }
+
+	 return true;
+ }

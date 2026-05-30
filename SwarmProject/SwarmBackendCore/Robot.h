@@ -38,6 +38,9 @@ public:
     // wykonywana jest przy wywołaniu setInitialForces()
     // oraz po wykonaniu każdego ruchu (computeMove())
 
+    void setLastMove(int x, int y);
+    
+
 private:
     double computeForceComponent(int dist);
     

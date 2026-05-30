@@ -62,6 +62,15 @@ void Robot::setMoveCount(int value)
     moveCount = value;
 }
 
+//wstecz
+void Robot::setLastMove(int x, int y)
+{
+    lastMoveX = x;
+    lastMoveY = y;
+}
+
+
+
 double Robot::computeForceComponent(int dist)
 {
     double ForceComponent = - k * 1 / (dist * dist);
@@ -175,3 +184,4 @@ vector<int> Robot::computeMove()
 
     return move;
 };
+

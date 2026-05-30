@@ -89,3 +89,8 @@ int WrapperMap::getRobotLastMoveY(int id)
 {
 	return mapa->get_robot_last_move_y(id);
 }
+
+bool WrapperMap::undoLastState()
+{
+	return mapa->undoLastState();
+}

@@ -34,6 +34,8 @@ public:
 	int getRobotLastMoveX(int id);
 	int getRobotLastMoveY(int id);
 
+	bool undoLastState();
+
 private:
 
 };

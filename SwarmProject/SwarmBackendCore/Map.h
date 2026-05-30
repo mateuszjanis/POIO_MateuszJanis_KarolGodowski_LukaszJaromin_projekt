@@ -4,12 +4,36 @@
 #include <string>
 #include "Robot.h"
 
+
+
 class Map
 {
 
 	int size_x, size_y;
 	std::vector<Robot*> robot_list;
 	std::vector<std::vector<int>> obj_map; 
+
+	//wstecz
+	struct RobotState
+	{
+		int x;
+		int y;
+		int moveCount;
+		int lastMoveX;
+		int lastMoveY;
+	};
+
+	struct MapState
+	{
+		int size_x;
+		int size_y;
+		std::vector<RobotState> robots;
+		std::vector<std::vector<int>> obj_map;
+	};
+
+	std::vector<MapState> history;
+
+	void saveState();
 
 public:
 	Map();
@@ -43,6 +67,9 @@ public:
 
 	bool saveToFile(const std::string& fileName);
 	bool loadFromFile(const std::string& fileName);
+
+	//wstecz
+	bool undoLastState();
 
 private:
 };

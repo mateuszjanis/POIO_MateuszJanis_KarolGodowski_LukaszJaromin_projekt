@@ -21,8 +21,20 @@ namespace SwarmGUI {
 	private:
 		WrapperMap* mapa = new WrapperMap(20, 20);
 	private: System::Windows::Forms::Button^ buttonToggleVectors;
+	private: System::Windows::Forms::Button^ buttonUndo;
+	private: System::Windows::Forms::Button^ buttonAddRobotByClick;
+	private: System::Windows::Forms::Button^ buttonAddObstacleByClick;
+
+
+	private: System::Windows::Forms::ToolStripMenuItem^ wsteczToolStripMenuItem;
+	private: System::Windows::Forms::Label^ label3;
+
 
 		   bool showVectors = false;
+
+
+		   int noMoveSteps = 0;
+
 
 	public:
 		MainWin(void)
@@ -31,6 +43,7 @@ namespace SwarmGUI {
 			//
 			//TODO: W tym miejscu dodaj kod konstruktora
 			//
+			pictureBoxMap->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainWin::pictureBoxMap_MouseClick);
 		}
 
 	private: void updateRobotTable()
@@ -41,6 +54,23 @@ namespace SwarmGUI {
 				Convert::ToString(mapa->getRobotMoveCount(i));
 		}
 	}
+
+	private: void rebuildRobotTable()
+	{
+		dataGridRobots->Rows->Clear();
+
+		for (int i = 0; i < mapa->getRobotNum(); i++)
+		{
+			dataGridRobots->Rows->Add(
+				Convert::ToString(i + 1),
+				Convert::ToString(mapa->getRobotMoveCount(i))
+			);
+		}
+	}
+
+	private:
+		int clickMode = 0;
+
 
 	protected:
 		/// <summary>
@@ -116,6 +146,7 @@ namespace SwarmGUI {
 			this->stopToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->resetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->krokToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->wsteczToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pomocToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->oProgramieToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->oAutorachToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -138,6 +169,10 @@ namespace SwarmGUI {
 			this->columnRobotID = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->columnMoveCount = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->buttonToggleVectors = (gcnew System::Windows::Forms::Button());
+			this->buttonUndo = (gcnew System::Windows::Forms::Button());
+			this->buttonAddRobotByClick = (gcnew System::Windows::Forms::Button());
+			this->buttonAddObstacleByClick = (gcnew System::Windows::Forms::Button());
+			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->menuStrip1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBoxMap))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericX))->BeginInit();
@@ -153,7 +188,7 @@ namespace SwarmGUI {
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(919, 24);
+			this->menuStrip1->Size = System::Drawing::Size(981, 24);
 			this->menuStrip1->TabIndex = 0;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -173,9 +208,9 @@ namespace SwarmGUI {
 			// 
 			// symulacjaToolStripMenuItem
 			// 
-			this->symulacjaToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
+			this->symulacjaToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
 				this->startToolStripMenuItem,
-					this->stopToolStripMenuItem, this->resetToolStripMenuItem, this->krokToolStripMenuItem
+					this->stopToolStripMenuItem, this->resetToolStripMenuItem, this->krokToolStripMenuItem, this->wsteczToolStripMenuItem
 			});
 			this->symulacjaToolStripMenuItem->Name = L"symulacjaToolStripMenuItem";
 			this->symulacjaToolStripMenuItem->Size = System::Drawing::Size(73, 20);
@@ -184,30 +219,37 @@ namespace SwarmGUI {
 			// startToolStripMenuItem
 			// 
 			this->startToolStripMenuItem->Name = L"startToolStripMenuItem";
-			this->startToolStripMenuItem->Size = System::Drawing::Size(102, 22);
+			this->startToolStripMenuItem->Size = System::Drawing::Size(111, 22);
 			this->startToolStripMenuItem->Text = L"Start";
 			this->startToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::startToolStripMenuItem_Click);
 			// 
 			// stopToolStripMenuItem
 			// 
 			this->stopToolStripMenuItem->Name = L"stopToolStripMenuItem";
-			this->stopToolStripMenuItem->Size = System::Drawing::Size(102, 22);
+			this->stopToolStripMenuItem->Size = System::Drawing::Size(111, 22);
 			this->stopToolStripMenuItem->Text = L"Stop";
 			this->stopToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::stopToolStripMenuItem_Click);
 			// 
 			// resetToolStripMenuItem
 			// 
 			this->resetToolStripMenuItem->Name = L"resetToolStripMenuItem";
-			this->resetToolStripMenuItem->Size = System::Drawing::Size(102, 22);
+			this->resetToolStripMenuItem->Size = System::Drawing::Size(111, 22);
 			this->resetToolStripMenuItem->Text = L"Reset";
 			this->resetToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::resetToolStripMenuItem_Click);
 			// 
 			// krokToolStripMenuItem
 			// 
 			this->krokToolStripMenuItem->Name = L"krokToolStripMenuItem";
-			this->krokToolStripMenuItem->Size = System::Drawing::Size(102, 22);
+			this->krokToolStripMenuItem->Size = System::Drawing::Size(111, 22);
 			this->krokToolStripMenuItem->Text = L"Krok";
 			this->krokToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::krokToolStripMenuItem_Click);
+			// 
+			// wsteczToolStripMenuItem
+			// 
+			this->wsteczToolStripMenuItem->Name = L"wsteczToolStripMenuItem";
+			this->wsteczToolStripMenuItem->Size = System::Drawing::Size(111, 22);
+			this->wsteczToolStripMenuItem->Text = L"Wstecz";
+			this->wsteczToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWin::wsteczToolStripMenuItem_Click);
 			// 
 			// pomocToolStripMenuItem
 			// 
@@ -236,7 +278,7 @@ namespace SwarmGUI {
 			// pictureBoxMap
 			// 
 			this->pictureBoxMap->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->pictureBoxMap->Location = System::Drawing::Point(20, 40);
+			this->pictureBoxMap->Location = System::Drawing::Point(20, 85);
 			this->pictureBoxMap->Name = L"pictureBoxMap";
 			this->pictureBoxMap->Size = System::Drawing::Size(500, 500);
 			this->pictureBoxMap->TabIndex = 1;
@@ -245,7 +287,7 @@ namespace SwarmGUI {
 			// 
 			// buttonStart
 			// 
-			this->buttonStart->Location = System::Drawing::Point(43, 638);
+			this->buttonStart->Location = System::Drawing::Point(20, 706);
 			this->buttonStart->Name = L"buttonStart";
 			this->buttonStart->Size = System::Drawing::Size(75, 23);
 			this->buttonStart->TabIndex = 2;
@@ -255,7 +297,7 @@ namespace SwarmGUI {
 			// 
 			// buttonStop
 			// 
-			this->buttonStop->Location = System::Drawing::Point(159, 638);
+			this->buttonStop->Location = System::Drawing::Point(127, 706);
 			this->buttonStop->Name = L"buttonStop";
 			this->buttonStop->Size = System::Drawing::Size(75, 23);
 			this->buttonStop->TabIndex = 3;
@@ -265,7 +307,7 @@ namespace SwarmGUI {
 			// 
 			// buttonReset
 			// 
-			this->buttonReset->Location = System::Drawing::Point(278, 638);
+			this->buttonReset->Location = System::Drawing::Point(238, 706);
 			this->buttonReset->Name = L"buttonReset";
 			this->buttonReset->Size = System::Drawing::Size(75, 23);
 			this->buttonReset->TabIndex = 4;
@@ -275,7 +317,7 @@ namespace SwarmGUI {
 			// 
 			// buttonStep
 			// 
-			this->buttonStep->Location = System::Drawing::Point(400, 638);
+			this->buttonStep->Location = System::Drawing::Point(339, 706);
 			this->buttonStep->Name = L"buttonStep";
 			this->buttonStep->Size = System::Drawing::Size(75, 23);
 			this->buttonStep->TabIndex = 5;
@@ -285,7 +327,7 @@ namespace SwarmGUI {
 			// 
 			// numericX
 			// 
-			this->numericX->Location = System::Drawing::Point(82, 564);
+			this->numericX->Location = System::Drawing::Point(82, 616);
 			this->numericX->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 19, 0, 0, 0 });
 			this->numericX->Name = L"numericX";
 			this->numericX->Size = System::Drawing::Size(120, 20);
@@ -294,7 +336,7 @@ namespace SwarmGUI {
 			// 
 			// numericY
 			// 
-			this->numericY->Location = System::Drawing::Point(324, 562);
+			this->numericY->Location = System::Drawing::Point(324, 611);
 			this->numericY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 19, 0, 0, 0 });
 			this->numericY->Name = L"numericY";
 			this->numericY->Size = System::Drawing::Size(120, 20);
@@ -304,7 +346,7 @@ namespace SwarmGUI {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(59, 569);
+			this->label1->Location = System::Drawing::Point(59, 618);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(17, 13);
 			this->label1->TabIndex = 8;
@@ -313,7 +355,7 @@ namespace SwarmGUI {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(301, 566);
+			this->label2->Location = System::Drawing::Point(301, 613);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(17, 13);
 			this->label2->TabIndex = 9;
@@ -321,7 +363,7 @@ namespace SwarmGUI {
 			// 
 			// buttonAddRobot
 			// 
-			this->buttonAddRobot->Location = System::Drawing::Point(82, 590);
+			this->buttonAddRobot->Location = System::Drawing::Point(82, 642);
 			this->buttonAddRobot->Name = L"buttonAddRobot";
 			this->buttonAddRobot->Size = System::Drawing::Size(120, 23);
 			this->buttonAddRobot->TabIndex = 10;
@@ -331,7 +373,7 @@ namespace SwarmGUI {
 			// 
 			// buttonAddObstackle
 			// 
-			this->buttonAddObstackle->Location = System::Drawing::Point(324, 590);
+			this->buttonAddObstackle->Location = System::Drawing::Point(324, 642);
 			this->buttonAddObstackle->Name = L"buttonAddObstackle";
 			this->buttonAddObstackle->Size = System::Drawing::Size(120, 23);
 			this->buttonAddObstackle->TabIndex = 11;
@@ -342,9 +384,9 @@ namespace SwarmGUI {
 			// labelStatus
 			// 
 			this->labelStatus->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->labelStatus->Location = System::Drawing::Point(20, 679);
+			this->labelStatus->Location = System::Drawing::Point(20, 760);
 			this->labelStatus->Name = L"labelStatus";
-			this->labelStatus->Size = System::Drawing::Size(159, 18);
+			this->labelStatus->Size = System::Drawing::Size(293, 18);
 			this->labelStatus->TabIndex = 12;
 			this->labelStatus->Text = L"Status: gotowe";
 			// 
@@ -356,7 +398,7 @@ namespace SwarmGUI {
 			// labelRobotsCount
 			// 
 			this->labelRobotsCount->AutoSize = true;
-			this->labelRobotsCount->Location = System::Drawing::Point(235, 679);
+			this->labelRobotsCount->Location = System::Drawing::Point(361, 761);
 			this->labelRobotsCount->Name = L"labelRobotsCount";
 			this->labelRobotsCount->Size = System::Drawing::Size(53, 13);
 			this->labelRobotsCount->TabIndex = 13;
@@ -365,7 +407,7 @@ namespace SwarmGUI {
 			// labelObstaclesCount
 			// 
 			this->labelObstaclesCount->AutoSize = true;
-			this->labelObstaclesCount->Location = System::Drawing::Point(341, 679);
+			this->labelObstaclesCount->Location = System::Drawing::Point(447, 761);
 			this->labelObstaclesCount->Name = L"labelObstaclesCount";
 			this->labelObstaclesCount->Size = System::Drawing::Size(73, 13);
 			this->labelObstaclesCount->TabIndex = 14;
@@ -380,7 +422,7 @@ namespace SwarmGUI {
 				this->columnRobotID,
 					this->columnMoveCount
 			});
-			this->dataGridRobots->Location = System::Drawing::Point(568, 40);
+			this->dataGridRobots->Location = System::Drawing::Point(631, 85);
 			this->dataGridRobots->Name = L"dataGridRobots";
 			this->dataGridRobots->ReadOnly = true;
 			this->dataGridRobots->Size = System::Drawing::Size(243, 500);
@@ -400,7 +442,7 @@ namespace SwarmGUI {
 			// 
 			// buttonToggleVectors
 			// 
-			this->buttonToggleVectors->Location = System::Drawing::Point(568, 590);
+			this->buttonToggleVectors->Location = System::Drawing::Point(631, 603);
 			this->buttonToggleVectors->Name = L"buttonToggleVectors";
 			this->buttonToggleVectors->Size = System::Drawing::Size(108, 23);
 			this->buttonToggleVectors->TabIndex = 16;
@@ -408,11 +450,54 @@ namespace SwarmGUI {
 			this->buttonToggleVectors->UseVisualStyleBackColor = true;
 			this->buttonToggleVectors->Click += gcnew System::EventHandler(this, &MainWin::buttonToggleVectors_Click);
 			// 
+			// buttonUndo
+			// 
+			this->buttonUndo->Location = System::Drawing::Point(445, 706);
+			this->buttonUndo->Name = L"buttonUndo";
+			this->buttonUndo->Size = System::Drawing::Size(75, 23);
+			this->buttonUndo->TabIndex = 17;
+			this->buttonUndo->Text = L"Wstecz";
+			this->buttonUndo->UseVisualStyleBackColor = true;
+			this->buttonUndo->Click += gcnew System::EventHandler(this, &MainWin::buttonUndo_Click);
+			// 
+			// buttonAddRobotByClick
+			// 
+			this->buttonAddRobotByClick->Location = System::Drawing::Point(348, 50);
+			this->buttonAddRobotByClick->Name = L"buttonAddRobotByClick";
+			this->buttonAddRobotByClick->Size = System::Drawing::Size(75, 23);
+			this->buttonAddRobotByClick->TabIndex = 18;
+			this->buttonAddRobotByClick->Text = L"Roboty";
+			this->buttonAddRobotByClick->UseVisualStyleBackColor = true;
+			this->buttonAddRobotByClick->Click += gcnew System::EventHandler(this, &MainWin::buttonAddRobotByClick_Click);
+			// 
+			// buttonAddObstacleByClick
+			// 
+			this->buttonAddObstacleByClick->Location = System::Drawing::Point(445, 50);
+			this->buttonAddObstacleByClick->Name = L"buttonAddObstacleByClick";
+			this->buttonAddObstacleByClick->Size = System::Drawing::Size(75, 23);
+			this->buttonAddObstacleByClick->TabIndex = 19;
+			this->buttonAddObstacleByClick->Text = L"Przeszkody";
+			this->buttonAddObstacleByClick->UseVisualStyleBackColor = true;
+			this->buttonAddObstacleByClick->Click += gcnew System::EventHandler(this, &MainWin::buttonAddObstacleByClick_Click);
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Location = System::Drawing::Point(17, 55);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(316, 13);
+			this->label3->TabIndex = 20;
+			this->label3->Text = L"Wybór trybu do dodawania elementów poprzez klikanie na mapie:";
+			// 
 			// MainWin
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(919, 706);
+			this->ClientSize = System::Drawing::Size(981, 816);
+			this->Controls->Add(this->label3);
+			this->Controls->Add(this->buttonAddObstacleByClick);
+			this->Controls->Add(this->buttonAddRobotByClick);
+			this->Controls->Add(this->buttonUndo);
 			this->Controls->Add(this->buttonToggleVectors);
 			this->Controls->Add(this->dataGridRobots);
 			this->Controls->Add(this->labelObstaclesCount);
@@ -588,6 +673,7 @@ private: System::Void pictureBoxMap_Paint(System::Object^ sender, System::Window
 			int endX = startX + moveX * 15;
 			int endY = startY + moveY * 15;
 
+
 			g->DrawLine(
 				gcnew Pen(Color::Blue, 2),
 				startX,
@@ -607,13 +693,49 @@ private: System::Void buttonStep_Click(System::Object^ sender, System::EventArgs
 	labelStatus->Text = L"Wykonano krok symulacji";
 }
 private: System::Void timerSimulation_Tick(System::Object^ sender, System::EventArgs^ e) {
+	//mapa->update();
+	//pictureBoxMap->Refresh();
+	//updateRobotTable();
+
+	//labelStatus->Text = L"Symulacja dzia³a";
+
+	int movesBefore = 0;
+
+	for (int i = 0; i < mapa->getRobotNum(); i++)
+	{
+		movesBefore += mapa->getRobotMoveCount(i);
+	}
+
 	mapa->update();
+
+	int movesAfter = 0;
+
+	for (int i = 0; i < mapa->getRobotNum(); i++)
+	{
+		movesAfter += mapa->getRobotMoveCount(i);
+	}
+
 	pictureBoxMap->Refresh();
 	updateRobotTable();
 
-	labelStatus->Text = L"Symulacja dzia³a";
+	if (movesAfter == movesBefore)
+		noMoveSteps++;
+	else
+		noMoveSteps = 0;
+
+	if (noMoveSteps >= 5)
+	{
+		timerSimulation->Stop();
+		labelStatus->Text = L"Symulacja zakoñczona - brak ruchu robotów";
+		noMoveSteps = 0;
+	}
+	else
+	{
+		labelStatus->Text = L"Symulacja dzia³a";
+	}
 }
 private: System::Void buttonStart_Click(System::Object^ sender, System::EventArgs^ e) {
+	noMoveSteps = 0;
 	timerSimulation->Start();
 	labelStatus->Text = L"Start symulacji";
 }
@@ -656,17 +778,24 @@ private: System::Void oProgramieToolStripMenuItem_Click(System::Object^ sender, 
 }
 private: System::Void startToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	buttonStart_Click(sender, e);
+	symulacjaToolStripMenuItem->ShowDropDown();
 }
 private: System::Void stopToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	buttonStop_Click(sender, e);
+	symulacjaToolStripMenuItem->ShowDropDown();
 }
 private: System::Void resetToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	buttonReset_Click(sender, e);
+	symulacjaToolStripMenuItem->ShowDropDown();
 }
 private: System::Void krokToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	buttonStep_Click(sender, e);
+	symulacjaToolStripMenuItem->ShowDropDown();
 }
-
+private: System::Void wsteczToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+	buttonUndo_Click(sender, e);
+	symulacjaToolStripMenuItem->ShowDropDown();
+}
 
 private: System::Void buttonToggleVectors_Click(System::Object^ sender, System::EventArgs^ e) {
 	showVectors = !showVectors;
@@ -678,5 +807,94 @@ private: System::Void buttonToggleVectors_Click(System::Object^ sender, System::
 
 	pictureBoxMap->Refresh();
 }
+private: System::Void buttonUndo_Click(System::Object^ sender, System::EventArgs^ e) {
+	bool result = mapa->undoLastState();
+
+	if (result)
+	{
+		pictureBoxMap->Refresh();
+		//updateRobotTable();
+		rebuildRobotTable();
+
+		labelRobotsCount->Text =
+			L"Roboty: " + Convert::ToString(mapa->getRobotNum());
+
+		labelObstaclesCount->Text =
+			L"Przeszkody: " + Convert::ToString(mapa->getObstacleNum());
+
+		labelStatus->Text = L"Cofnieto ostatni krok";
+	}
+	else
+	{
+		labelStatus->Text = L"Brak poprzedniego stanu";
+	}
+}
+
+private: System::Void buttonAddRobotByClick_Click(System::Object^ sender, System::EventArgs^ e) {
+	clickMode = 1;
+	labelStatus->Text = L"Kliknij pole na mapie, aby dodaæ robota";
+}
+
+private: System::Void buttonAddObstacleByClick_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	clickMode = 2;
+	labelStatus->Text = L"Kliknij pole na mapie, aby dodaæ przeszkodê";
+}
+
+
+	   private: System::Void pictureBoxMap_MouseClick(System::Object^ sender,System::Windows::Forms::MouseEventArgs^ e)
+	   {
+		   if (clickMode == 0)
+			   return;
+
+		   int mapWidth = mapa->getSizeX();
+		   int mapHeight = mapa->getSizeY();
+
+		   int cellWidth = pictureBoxMap->Width / mapWidth;
+		   int cellHeight = pictureBoxMap->Height / mapHeight;
+
+		   int x = e->X / cellWidth;
+		   int y = e->Y / cellHeight;
+
+		   int wynik;
+
+		   if (clickMode == 1)
+		   {
+			   wynik = mapa->placeRobot(x, y);
+
+			   if (wynik == 0)
+			   {
+				   labelStatus->Text = L"Dodano robota";
+
+				   dataGridRobots->Rows->Add(
+					   Convert::ToString(mapa->getRobotNum()),
+					   "0"
+				   );
+			   }
+			   else
+			   {
+				   labelStatus->Text = L"Nie mo¿na dodaæ robota";
+			   }
+
+			   labelRobotsCount->Text =
+				   L"Roboty: " + Convert::ToString(mapa->getRobotNum());
+		   }
+		   else if (clickMode == 2)
+		   {
+			   wynik = mapa->placeObstacle(x, y);
+
+			   if (wynik == 0)
+				   labelStatus->Text = L"Dodano przeszkodê";
+			   else
+				   labelStatus->Text = L"Nie mo¿na dodaæ przeszkody";
+
+			   labelObstaclesCount->Text =
+				   L"Przeszkody: " + Convert::ToString(mapa->getObstacleNum());
+		   }
+
+		   pictureBoxMap->Refresh();
+
+		   //clickMode = 0;
+	   }
 };
 }
