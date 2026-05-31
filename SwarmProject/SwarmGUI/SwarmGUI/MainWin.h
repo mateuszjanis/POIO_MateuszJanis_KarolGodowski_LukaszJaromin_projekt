@@ -723,7 +723,7 @@ private: System::Void timerSimulation_Tick(System::Object^ sender, System::Event
 	else
 		noMoveSteps = 0;
 
-	if (noMoveSteps >= 5)
+	if (noMoveSteps >= 6)
 	{
 		timerSimulation->Stop();
 		labelStatus->Text = L"Symulacja zakoñczona - brak ruchu robotów";

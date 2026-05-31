@@ -228,6 +228,12 @@ void Map::update()
 	vector<int> curr_move = { 0,0 };
 	vector<vector<int>> move_list;
 
+	// aktualizacja sił przed obliczeniem ruchu
+	for (auto& robot : robot_list)
+	{
+		robot->computeForce(obj_map);
+	}
+
 	// obliczenie ruchów
 	for (auto& robot : robot_list)
 	{
