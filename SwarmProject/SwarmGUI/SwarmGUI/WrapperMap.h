@@ -19,13 +19,14 @@ public:
 
 	int getRobotNum();
 	int getObstacleNum();
+	std::vector<double> getForce(int id) { return mapa->get_robot_Force(id); }
 
 	// do liczenia ruchow robota
 	int getRobotMoveCount(int id);
 
 	std::vector<int> getRobotPos(int id);
 
-	void setInitialForces(); // Wyliczenie sił - powinno być użyte po postawieniu
+	void updateForces(); // Wyliczenie sił - powinno być użyte po postawieniu
 	// wszystkich przeszkód i robotów
 	// jeśli dodajemy roboty podczas symulacji - też wywołać
 	// siły są liczone dla kolejnego ruchu wykonanego

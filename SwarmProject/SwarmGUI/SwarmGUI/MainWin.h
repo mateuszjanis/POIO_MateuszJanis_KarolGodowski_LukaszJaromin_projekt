@@ -664,14 +664,19 @@ private: System::Void pictureBoxMap_Paint(System::Object^ sender, System::Window
 
 		if (showVectors)
 		{
-			int moveX = mapa->getRobotLastMoveX(i);
-			int moveY = mapa->getRobotLastMoveY(i);
+			//int moveX = mapa->getRobotLastMoveX(i);
+			//int moveY = mapa->getRobotLastMoveY(i);
+
+			std::vector<double> Force = mapa->getForce(i);
 
 			int startX = x * cellW + cellW / 2;
 			int startY = y * cellH + cellH / 2;
 
-			int endX = startX + moveX * 15;
-			int endY = startY + moveY * 15;
+			//int endX = startX + moveX * 15;
+			//int endY = startY + moveY * 15;
+
+			int endX = startX + Force[0] * 15;
+			int endY = startY + Force[1] * 15;
 
 
 			g->DrawLine(

@@ -254,7 +254,6 @@ void Map::update()
 
 }
 
-
 int Map::get_obstacle_num()
 {
     int count = 0;
@@ -281,7 +280,7 @@ int Map::get_robot_last_move_y(int id)
 	return robot_list[id]->getLastMoveY();
 }
 
-void Map::setInitialForces()
+void Map::updateForces()
 {
 	for (auto& robot : robot_list)
 	{
@@ -483,6 +482,8 @@ void Map::setInitialForces()
 
 		 robot_list.push_back(robot);
 	 }
+
+	 updateForces();
 
 	 return true;
  }
