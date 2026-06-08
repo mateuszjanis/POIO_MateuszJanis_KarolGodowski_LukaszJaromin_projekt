@@ -296,17 +296,14 @@ void Map::updateForces()
  bool Map::saveToFile(const string& fileName)
  {
 	 FILE* file = nullptr;
-	 // Bezpieczne otwarcie pliku w trybie zapisu ("w")
 	 if (fopen_s(&file, fileName.c_str(), "w") != 0 || file == nullptr)
 	 {
 		 return false;
 	 }
 
-	 // Nagłówek i rozmiar mapy
 	 fprintf(file, "SWARM_SAVE_V1\n");
 	 fprintf(file, "%d %d\n", size_x, size_y);
 
-	 // Zliczanie wewnętrznych przeszkód
 	 int obstacleCount = 0;
 	 for (int x = 0; x < size_x; x++)
 	 {
@@ -319,7 +316,6 @@ void Map::updateForces()
 		 }
 	 }
 
-	 // Zapis przeszkód
 	 fprintf(file, "OBSTACLES %d\n", obstacleCount);
 	 for (int x = 0; x < size_x; x++)
 	 {
@@ -332,7 +328,6 @@ void Map::updateForces()
 		 }
 	 }
 
-	 // Zapis robotów
 	 fprintf(file, "ROBOTS %zu\n", robot_list.size());
 	 for (size_t i = 0; i < robot_list.size(); i++)
 	 {
@@ -376,13 +371,11 @@ void Map::updateForces()
 		 return false;
 	 }
 
-	 // Zmiana rozmiaru mapy (zobacz uwagę poniżej dotyczącą tej funkcji!)
 	 this->resize(new_size_x, new_size_y);
 
 	 char section[64];
 	 int itemsCount;
 
-	 // Odczyt bloków pliku
 	 while (fscanf_s(file, "%63s %d", section, (unsigned)_countof(section), &itemsCount) == 2)
 	 {
 		 if (strcmp(section, "OBSTACLES") == 0)
