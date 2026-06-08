@@ -94,3 +94,13 @@ bool WrapperMap::undoLastState()
 {
 	return mapa->undoLastState();
 }
+
+bool WrapperMap::saveToFile(const string& fileName)
+{
+	return mapa->saveToFile(fileName);
+}
+
+bool WrapperMap::loadFromFile(const string& fileName)
+{
+	return mapa->loadFromFile(fileName);
+}

@@ -2,6 +2,8 @@
 #include "pch.h"
 #include <vector>
 #include <string>
+#include <cstdio>
+#include <cstring>
 #include "Robot.h"
 
 

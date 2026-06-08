@@ -22,6 +22,11 @@ void Map::resize(int x_len, int y_len) {
 
     size_x = x_len;
     size_y = y_len;
+
+	for (auto& robot : robot_list) {
+		delete robot;
+	}
+
     robot_list.clear();
 
     obj_map.assign(x_len, vector<int>(y_len, 0));
@@ -290,121 +295,138 @@ void Map::updateForces()
 
  bool Map::saveToFile(const string& fileName)
  {
- //    ofstream file(fileName);
- //
- //    if (!file.is_open())
- //    {
- //        return false;
- //    }
- //
- //    file << "SWARM_SAVE_V1" << endl;
- //    file << size_x << " " << size_y << endl;
- //
-     int obstacleCount = 0;
-     for (int x = 0; x < size_x; x++)
-     {
-         for (int y = 0; y < size_y; y++)
-         {
-             if (obj_map[x][y] == 1 && !(x == 0 || x == size_x - 1 || y == 0 || y == size_y - 1))
-             {
-                 obstacleCount++;
-             }
-         }
-     }
- //
- //    file << "OBSTACLES " << obstacleCount << endl;
- //    for (int x = 0; x < size_x; x++)
- //    {
- //        for (int y = 0; y < size_y; y++)
- //        {
- //            if (obj_map[x][y] == 1 && !(x == 0 || x == size_x - 1 || y == 0 || y == size_y - 1))
- //            {
- //                file << x << " " << y << endl;
- //            }
- //        }
- //    }
- //
- //    file << "ROBOTS " << robot_list.size() << endl;
- //    for (int i = 0; i < robot_list.size(); i++)
- //    {
- //        file << robot_list[i]->getPosX() << " "
- //            << robot_list[i]->getPosY() << " "
- //            << robot_list[i]->getMoveCount() << endl;
- //    }
- //
-     return true;
+	 FILE* file = nullptr;
+	 // Bezpieczne otwarcie pliku w trybie zapisu ("w")
+	 if (fopen_s(&file, fileName.c_str(), "w") != 0 || file == nullptr)
+	 {
+		 return false;
+	 }
+
+	 // Nagłówek i rozmiar mapy
+	 fprintf(file, "SWARM_SAVE_V1\n");
+	 fprintf(file, "%d %d\n", size_x, size_y);
+
+	 // Zliczanie wewnętrznych przeszkód
+	 int obstacleCount = 0;
+	 for (int x = 0; x < size_x; x++)
+	 {
+		 for (int y = 0; y < size_y; y++)
+		 {
+			 if (obj_map[x][y] == 1 && !(x == 0 || x == size_x - 1 || y == 0 || y == size_y - 1))
+			 {
+				 obstacleCount++;
+			 }
+		 }
+	 }
+
+	 // Zapis przeszkód
+	 fprintf(file, "OBSTACLES %d\n", obstacleCount);
+	 for (int x = 0; x < size_x; x++)
+	 {
+		 for (int y = 0; y < size_y; y++)
+		 {
+			 if (obj_map[x][y] == 1 && !(x == 0 || x == size_x - 1 || y == 0 || y == size_y - 1))
+			 {
+				 fprintf(file, "%d %d\n", x, y);
+			 }
+		 }
+	 }
+
+	 // Zapis robotów
+	 fprintf(file, "ROBOTS %zu\n", robot_list.size());
+	 for (size_t i = 0; i < robot_list.size(); i++)
+	 {
+		 fprintf(file, "%d %d %d %d %d\n",
+			 robot_list[i]->getPosX(),
+			 robot_list[i]->getPosY(),
+			 robot_list[i]->getMoveCount(),
+			 robot_list[i]->getLastMoveX(),
+			 robot_list[i]->getLastMoveY());
+	 }
+
+	 fclose(file);
+	 return true;
  }
  
  bool Map::loadFromFile(const string& fileName)
  {
-	 //    ifstream file(fileName);
+	 FILE* file = nullptr;
+	 if (fopen_s(&file, fileName.c_str(), "r") != 0 || file == nullptr)
+	 {
+		 return false;
+	 }
 
- //    if (!file.is_open())
- //    {
- //        return false;
- //    }
+	 char header[64];
+	 if (fscanf_s(file, "%63s", header, (unsigned)_countof(header)) != 1)
+	 {
+		 fclose(file);
+		 return false;
+	 }
 
- //    string header;
- //    file >> header;
+	 if (strcmp(header, "SWARM_SAVE_V1") != 0)
+	 {
+		 fclose(file);
+		 return false;
+	 }
 
- //    if (header != "SWARM_SAVE_V1")
- //    {
- //        return false;
- //    }
+	 int new_size_x, new_size_y;
+	 if (fscanf_s(file, "%d %d", &new_size_x, &new_size_y) != 2)
+	 {
+		 fclose(file);
+		 return false;
+	 }
 
-	 int loadedSizeX, loadedSizeY;
-	 //    file >> loadedSizeX >> loadedSizeY;
+	 // Zmiana rozmiaru mapy (zobacz uwagę poniżej dotyczącą tej funkcji!)
+	 this->resize(new_size_x, new_size_y);
 
-	 //    if (loadedSizeX < 3 || loadedSizeY < 3)
-	 //    {
-	 //        return false;
-	 //    }
+	 char section[64];
+	 int itemsCount;
 
-	 //    resize(loadedSizeX, loadedSizeY);
+	 // Odczyt bloków pliku
+	 while (fscanf_s(file, "%63s %d", section, (unsigned)_countof(section), &itemsCount) == 2)
+	 {
+		 if (strcmp(section, "OBSTACLES") == 0)
+		 {
+			 for (int i = 0; i < itemsCount; i++)
+			 {
+				 int ox, oy;
+				 if (fscanf_s(file, "%d %d", &ox, &oy) == 2)
+				 {
+					 if (ox > 0 && ox < size_x - 1 && oy > 0 && oy < size_y - 1)
+					 {
+						 obj_map[ox][oy] = 1;
+					 }
+				 }
+			 }
+		 }
+		 else if (strcmp(section, "ROBOTS") == 0)
+		 {
+			 for (int i = 0; i < itemsCount; i++)
+			 {
+				 int rx, ry, moveCount, lastMoveX, lastMoveY;
+				 if (fscanf_s(file, "%d %d %d %d %d", &rx, &ry, &moveCount, &lastMoveX, &lastMoveY) == 5)
+				 {
+					 if (rx > 0 && rx < size_x - 1 && ry > 0 && ry < size_y - 1)
+					 {
+						 Robot* robot = new Robot(rx, ry, moveCount);
+						 robot->setLastMove(lastMoveX, lastMoveY);
 
-	 string sectionName;
-	 int obstacleCount;
-	 //    file >> sectionName >> obstacleCount;
+						 robot_list.push_back(robot);
+						 obj_map[rx][ry] = 2;
+					 }
+				 }
+			 }
+		 }
+	 }
 
-	 //    if (sectionName != "OBSTACLES")
-	 //    {
-	 //        return false;
-	 //    }
+	 fclose(file);
 
-	 //    for (int i = 0; i < obstacleCount; i++)
-	 //    {
-	 //        int x, y;
-	 //        file >> x >> y;
-
-	 //        if (x > 0 && x < size_x - 1 && y > 0 && y < size_y - 1 && obj_map[x][y] == 0)
-	 //        {
-	 //            obj_map[x][y] = 1;
-	 //        }
-	 //    }
-
-	 //    int robotCount;
-	 //    file >> sectionName >> robotCount;
-
-	 //    if (sectionName != "ROBOTS")
-	 //    {
-	 //        return false;
-	 //    }
-
-	 //    for (int i = 0; i < robotCount; i++)
-	 //    {
-	 //        int x, y, moveCount;
-	 //        file >> x >> y >> moveCount;
-
-	 //        if (x > 0 && x < size_x - 1 && y > 0 && y < size_y - 1 && obj_map[x][y] == 0)
-	 //        {
-	 //            robot_list.push_back(new Robot(x, y, obj_map, moveCount));
-	 //            obj_map[x][y] = 2;
-	 //        }
-	 //    }
+	 updateForces();
+	 history.clear();
 
 	 return true;
  }
- 
+
  void Map::saveState()
  {
 	 MapState state;

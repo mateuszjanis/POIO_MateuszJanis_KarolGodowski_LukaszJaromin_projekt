@@ -37,6 +37,9 @@ public:
 
 	bool undoLastState();
 
+	bool saveToFile(const std::string& fileName);
+	bool loadFromFile(const std::string& fileName);
+
 private:
 
 };
