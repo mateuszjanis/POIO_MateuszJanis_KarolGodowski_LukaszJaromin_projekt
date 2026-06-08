@@ -154,6 +154,7 @@ vector<int> Robot::computeMove()
         move[0] = 0;
         move[1] = 0;
     }
+
     else
     {
         if (ForceY >= 0) { my = 1; }

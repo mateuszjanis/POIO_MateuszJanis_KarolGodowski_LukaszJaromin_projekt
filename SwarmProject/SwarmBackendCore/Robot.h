@@ -3,10 +3,12 @@
 #include <vector>
 #include <cmath>
 
+#define k 1
+
 class Robot
 {
 private:
-    double k = 1;
+
     int radius = 5;
     int x_pos, y_pos;
     int lastMoveX = 0;
