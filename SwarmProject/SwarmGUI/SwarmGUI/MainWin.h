@@ -677,23 +677,7 @@ private: System::Void pictureBoxMap_Paint(System::Object^ sender, System::Window
 				g->FillRectangle(Brushes::White, rect);
 			else if (obj_map[x][y] == 1)
 				g->FillRectangle(Brushes::Black, rect);
-			//else if (obj_map[x][y] == 2)
-			//{
-			//	Rectangle robotRect(x * cellW + cellW / 4 , y * cellH + cellH / 4, cellW / 2, cellH / 2);
-			//	g->FillEllipse(Brushes::Red, robotRect);
 
-			//	String^ text = Convert::ToString(robotID + 1);
-
-			//	g->DrawString(
-			//		text,
-			//		gcnew Drawing::Font("Arial", 8),
-			//		Brushes::White,
-			//		x * cellW + cellW / 4,
-			//		y * cellH + cellH / 4
-			//	);
-
-			//	robotID++;
-			//}
 			g->DrawRectangle(Pens::Gray, rect);
 		}
 	}

@@ -11,7 +11,6 @@ public:
 	int placeRobot(int x, int y);
 	int placeObstacle(int x, int y);
 	void update();
-	void showRobotPos();
 
 	std::vector<std::vector<int>> getMap();
 	int getSizeX();
